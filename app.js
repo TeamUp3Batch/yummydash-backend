@@ -5,6 +5,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const usersRoutes = require("./routes/usersRoutes");
 const authRoutes = require("./routes/authRoutes");
+const restaurantRoutes = require("./routes/restaurantRoutes");
 const protect = require("./middleware/authMiddleware");
 
 
@@ -19,6 +20,7 @@ app.use(cors());
 // routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes); 
+app.use("/api/restaurants",restaurantRoutes);
 
 const PORT = process.env.PORT || 5000;
 

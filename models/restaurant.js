@@ -29,10 +29,11 @@ const restaurantSchema = new mongoose.Schema({
       category: String,
     },
   ],
-  ratings: null,
+  ratings: Number,
   reviews: [],
   openingHours: {},
-  // Add other fields as needed (e.g., ratings, reviews, delivery options, opening hours, etc.)
 });
 
-module.exports = mongoose.model("Restaurant", restaurantSchema);
+const Restaurant = mongoose.model("restaurant", restaurantSchema);
+
+module.exports = {Restaurant}

@@ -1,5 +1,4 @@
 const {Restaurant} = require("../models/restaurant");
-const Restaurant = require('../models/restaurant');
 
 // Controller function to get all restaurants in an area
 const getAllRestaurants = async (req, res) => {
