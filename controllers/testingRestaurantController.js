@@ -1,13 +1,13 @@
-const {Restaurant} = require("../models/restaurant");
+const {TestingRestaurant} = require("../models/testingrestaurant");
 const upload = require('./../helpers/multerHelper');
 
 // Controller function to get all restaurants in an area
 
-const insertNewRestaurant = async(req,res) =>{
+const insertNewTestRestaurant = async(req,res) =>{
     console.log("inserting...............")
     try{
         console.log("trying.....")
-        const newRestaurant = new Restaurant({
+        const newRestaurant = new TestingRestaurant({
             name: req.body.name,
             description: req.body.description,
             cuisine: req.body.cuisine,
@@ -17,25 +17,19 @@ const insertNewRestaurant = async(req,res) =>{
             ratings: req.body.ratings,
             reviews: req.body.reviews,
             openingHours: req.body.openingHours,
+            restaurantImage:req.body.restaurantImage
           });
       
-          upload.single('restaurantImage'),async(req,res,next) => {    
-            if (req.file) {
-              // If an image was uploaded, set the restaurantImage field to the uploaded image buffer
-              newRestaurant.restaurantImage = req.file.buffer;
-            }
-
-        const savedRestaurant = await newRestaurant.save();
-
-        res.status(201).json(savedRestaurant); 
-    }
+    await newRestaurant.save();
+    res.send({"savedRestaurant":newRestaurant}); 
+    
 }
     catch(error){
         console.log(error);
         res.send(500).json({ message: 'Internal Server Error' });
     }
 }
-const getAllRestaurants = async (req, res) => {
+const getAllTestRestaurants = async (req, res) => {
   try {
     // You can filter restaurants based on the area (location) here
     const restaurants = await Restaurant.find();
@@ -46,7 +40,7 @@ const getAllRestaurants = async (req, res) => {
   }
 };
 
-const getRestaurantsByCuisine = async(req,res)=>{
+const getTestRestaurantsByCuisine = async(req,res)=>{
     try{
         const byCuisine = await Restaurant.find({cuisine:req.body.cuisine})
         res.json(byCuisine);
@@ -57,7 +51,7 @@ const getRestaurantsByCuisine = async(req,res)=>{
     }
 }
 
-const uploadRestaurantImage = async(req,res) =>{
+const uploadTestRestaurantImage = async(req,res) =>{
     try{
 
         let restaurant = await Restaurant.findOne({ name: req.body.restaurantName });
@@ -97,8 +91,8 @@ const uploadRestaurantImage = async(req,res) =>{
 // }
 
 module.exports = {
-  getAllRestaurants,
-  getRestaurantsByCuisine,
-  uploadRestaurantImage,
-  insertNewRestaurant
+  getAllTestRestaurants,
+  getTestRestaurantsByCuisine,
+  uploadTestRestaurantImage,
+  insertNewTestRestaurant
 };

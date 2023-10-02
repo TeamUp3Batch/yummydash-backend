@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const menuItemSchema = require('./menu');
 const { Schema } = mongoose;
-const restaurantSchema = new mongoose.Schema({
+const testingrestaurantSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -27,7 +27,7 @@ const restaurantSchema = new mongoose.Schema({
     website: String,
   },
   menu: [
-    {
+     {
       name: String,
       description: String,
       price: Number,
@@ -40,6 +40,6 @@ const restaurantSchema = new mongoose.Schema({
   openingHours: {},
 });
 
-const Restaurant = mongoose.model("restaurant", restaurantSchema);
+const TestingRestaurant = mongoose.model("testingrestaurants", testingrestaurantSchema);
 
-module.exports = {Restaurant}
+module.exports = {TestingRestaurant}

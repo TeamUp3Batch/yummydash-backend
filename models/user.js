@@ -6,6 +6,14 @@ const userSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  address:[{
+    unitNumber:String,
+    street:String,
+    city:String,
+    state:String,
+    zipCode:String,
+    country:String, 
+  }]
 });
 
 userSchema.methods.generateAuthToken = function () {
