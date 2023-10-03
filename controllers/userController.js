@@ -22,7 +22,7 @@ const addNewUserAddress = async (req, res) => {
     )
       .then(async(result) => {
         console.log("result",result);
-        res.status(500).send({ "user": result });
+        res.status(201).send({ "user":result,"status":"successs" });
       })
       .catch((err) => {
         console.log("eror mongo",err)
