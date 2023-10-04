@@ -21,8 +21,8 @@ const addNewUserAddress = async (req, res) => {
       { new: true, upsert: true }
     )
       .then(async(result) => {
-        console.log("result",result);
-        res.status(201).send({ "user":result,"status":"successs" });
+        console.log("result",result.address);
+        res.status(201).send({ "address":result.address,"status":"successs" });
       })
       .catch((err) => {
         console.log("eror mongo",err)
