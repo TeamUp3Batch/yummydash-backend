@@ -20,7 +20,7 @@ console.log("email and password",req.body.email,req.body.password)
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        addresses:user.addresses,
+        address:user.address,
         token,
         status:"logged in"
       });
