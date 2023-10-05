@@ -21,7 +21,10 @@ app.use(cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes); 
 app.use("/api/restaurants",restaurantRoutes);
-
+//testing route
+app.get("/test", (req, res) => {
+  res.send("Hello");
+});
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
