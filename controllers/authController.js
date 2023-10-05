@@ -68,6 +68,7 @@ const registerUser = async (req, res) => {
       firstName: newSavedUser.firstName,
       lastName: newSavedUser.lastName,
       email: newSavedUser.email,
+      address:[],
       token,status:"success" });
   }
   else{
