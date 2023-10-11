@@ -1,5 +1,4 @@
 const {Restaurant} = require("../models/restaurant");
-const upload = require('./../helpers/multerHelper');
 
 // Controller function to get all restaurants in an area
 
@@ -57,48 +56,13 @@ const getRestaurantsByCuisine = async(req,res)=>{
     }
 }
 
-const uploadRestaurantImage = async(req,res) =>{
-    try{
 
-        let restaurant = await Restaurant.findOne({ name: req.body.restaurantName });
-        if(restaurant){
 
-            const updateResult = await restaurant.updateOne({
-                name:req.body.restaurantName
-            },{
-                $set: {
-                    restaurantImage:req.file.buffer, // Replace with your new image object
-                  }
-            });
-            console.log("updateResult",updateResult)
-            if (updateResult.matchedCount === 1) {
-                console.log("sucessssssssssssssss")
-               res.send({message:"Restaurant image updated successfully."});
-              } else {
-                console.log("FAILED!")
-                // No document was matched for update
-                res.send({message:"Restaurant not found."});
-              }
-        }
-        else{
-            res.send({message:"no restauarant found with given name"})
-        }
 
-    }
-    catch(error){
-        console.error(error);
-        res.status(500).send('Server error');
-    }
-}
 
-// const uploadMenuImage = async(req,res){
-//     try{}
-//     catch{}
-// }
 
 module.exports = {
   getAllRestaurants,
   getRestaurantsByCuisine,
-  uploadRestaurantImage,
   insertNewRestaurant
 };
