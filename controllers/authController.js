@@ -22,14 +22,14 @@ console.log("email and password",req.body.email,req.body.password)
         email: user.email,
         address:user.address,
         token,
-        status:"logged in"
+        status:true
       });
     } else {
-      res.status(401).json({ message: "Invalid email or password" });
+      res.status(401).json({ message: "Invalid email or password",status:false });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Internal Server Error",status:false });
   }
 };
 
