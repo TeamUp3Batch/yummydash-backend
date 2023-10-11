@@ -37,7 +37,10 @@ console.log("email and password",req.body.email,req.body.password)
 const registerUser = async (req, res) => {
   console.log("hitting signup")
   const { firstName, lastName, email, password } = req.body;
-
+  if (!firstName || !lastName || !email || !password) {
+    res.status(400).json({ message: "All fields are mandatory" });
+    return;
+  }
   try {
     const userExists = await User.findOne({ email: req.body.email });
 
@@ -69,7 +72,7 @@ const registerUser = async (req, res) => {
       lastName: newSavedUser.lastName,
       email: newSavedUser.email,
       address:[],
-      token,status:"success" });
+      token,status:true });
   }
   else{
     res.status(500).json({ message: "Error saving new user" });
