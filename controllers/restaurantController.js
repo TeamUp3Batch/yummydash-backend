@@ -48,6 +48,7 @@ const getAllRestaurants = async (req, res) => {
 const getRestaurantsByCuisine = async(req,res)=>{
     try{
         const byCuisine = await Restaurant.find({cuisine:req.body.cuisine})
+        console.log("bycuisine",byCuisine)
         res.json(byCuisine);
     }
     catch(error){

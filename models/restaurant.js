@@ -40,6 +40,6 @@ const restaurantSchema = new mongoose.Schema({
   openingHours: {},
 });
 
-const Restaurant = mongoose.model("restaurant", restaurantSchema);
+const Restaurant = mongoose.model("restaurants", restaurantSchema);
 
 module.exports = {Restaurant}
