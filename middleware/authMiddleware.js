@@ -5,7 +5,9 @@ const protect = async (req, res, next) => {
   let token = req.header("x-auth-token");
 
   if (!token) {
-    return res.status(401).json({ message: "Access denied. No token provided" });
+    return res
+      .status(401)
+      .json({ message: "Access denied. No token provided" });
   }
 
   try {
