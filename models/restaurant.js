@@ -1,13 +1,13 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const menuItemSchema = require('./menu');
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 const restaurantSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  restaurantImage:{
-    type: String, 
+  restaurantImage: {
+    type: String,
     required: false,
   },
   description: String,
@@ -32,14 +32,14 @@ const restaurantSchema = new mongoose.Schema({
       description: String,
       price: Number,
       category: String,
-      image: { type: String, required: false },
-    } 
+      image: {type: String, required: false},
+    },
   ],
   ratings: Number,
   reviews: [],
   openingHours: {},
 });
 
-const Restaurant = mongoose.model("restaurants", restaurantSchema);
+const Restaurant = mongoose.model('restaurants', restaurantSchema);
 
-module.exports = {Restaurant}
+module.exports = {Restaurant};
