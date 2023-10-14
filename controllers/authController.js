@@ -20,6 +20,7 @@ const authUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        phoneNumber: user.phoneNumber,
         address: user.address,
         token,
         status: true,
@@ -42,9 +43,9 @@ const authUser = async (req, res) => {
 // Register a new user
 const registerUser = async (req, res) => {
   console.log('hitting signup');
-  const {firstName, lastName, email, password} = req.body;
-  if (!firstName || !lastName || !email || !password) {
-    res.status(400).json({message: 'All fields are mandatory'});
+  const {firstName, lastName, email, phoneNumber, password} = req.body;
+  if (!firstName || !lastName || !email || !phoneNumber || !password) {
+    res.status(400).json({message: 'All fields are mandatory',status:false});
     return;
   }
   try {
@@ -63,6 +64,7 @@ const registerUser = async (req, res) => {
       firstName,
       lastName,
       email,
+      phoneNumber,
       password: hashPassword,
     });
 
@@ -82,12 +84,13 @@ const registerUser = async (req, res) => {
         firstName: newSavedUser.firstName,
         lastName: newSavedUser.lastName,
         email: newSavedUser.email,
+        phoneNumber: newSavedUser.email,
         address: [],
         token,
         status: true,
       });
     } else {
-      res.status(500).json({message: 'Error saving new user'});
+      res.status(500).json({message: 'Error saving new user',status:false});
     }
   } catch (error) {
     console.error(error);
