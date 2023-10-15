@@ -1,11 +1,8 @@
 const {User} = require('../models/user');
 
 const addNewUserAddress = async (req, res) => {
-  console.log('hitting add new user address');
 
   try {
-    console.log('body is', req.body);
-    console.log('email is', req.body.email);
     User.findOneAndUpdate(
         {email: req.body.email},
         {
@@ -23,14 +20,12 @@ const addNewUserAddress = async (req, res) => {
         {new: true, upsert: true},
     )
         .then(async (result) => {
-          console.log('result', result.address);
           res.status(201).send({
             address: result.address,
             status: 'successs',
           });
         })
         .catch((err) => {
-          console.log('eror mongo', err);
           res.status(500).send({mongoError: err});
         });
   } catch (error) {

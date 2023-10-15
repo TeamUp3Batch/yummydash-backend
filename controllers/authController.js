@@ -4,9 +4,7 @@ const jwt = require('jsonwebtoken');
 
 // Auth user & get token
 const authUser = async (req, res) => {
-  console.log('hitting auth User');
   const {email, password} = req.body;
-  console.log('email and password', req.body.email, req.body.password);
   try {
     const user = await User.findOne({email});
 
@@ -42,7 +40,6 @@ const authUser = async (req, res) => {
 
 // Register a new user
 const registerUser = async (req, res) => {
-  console.log('hitting signup');
   const {firstName, lastName, email, phoneNumber, password} = req.body;
   if (!firstName || !lastName || !email || !phoneNumber || !password) {
     res.status(400).json({message: 'All fields are mandatory',status:false});
@@ -57,7 +54,6 @@ const registerUser = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(Number(process.env.SALT));
-    console.log('sale here', salt);
     const hashPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
