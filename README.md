@@ -1,17 +1,20 @@
 # Yummy Dash Backend
 
-Food App inspired form the popular app skip the dishes
+Food Delivery App inspired from the popular app- Skip The Dishes
 
 ## Prerequistes
 - Node 
 - npm
-- Mongo DB account 
+- Mongo DB  
 
 ## Installation
 
 1. Clone the Repo
 2. Install the Dependencies
 3. Start the Application
-4. Check the env.empmple for the nesessary variable 
+4. Check the env.empmple
+
+## Main Contributor
+[Kavitha Shanmugan](https://github.com/kavithashanmugan)
 
  
