@@ -14,7 +14,7 @@ Food Delivery App inspired from the popular app- Skip The Dishes
 3. Start the Application
 4. Check the env.empmple
 
-## Main Contributor
+## Main Contributors
 [Kavitha Shanmugan](https://github.com/kavithashanmugan)
 
  
