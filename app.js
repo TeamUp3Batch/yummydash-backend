@@ -7,7 +7,6 @@ const usersRoutes = require('./routes/usersRoutes')
 const authRoutes = require('./routes/authRoutes')
 const restaurantRoutes = require('./routes/restaurantRoutes')
 const cuisineRoutes = require('./routes/cuisineRoutes')
-//const protect = require('./middleware/authMiddleware');
 const logger = require('./utils/logger')
 
 // database connection
