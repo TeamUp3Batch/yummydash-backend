@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const logger = require('./utils/logger');
 
 // Database connection
 mongoose.connect(
@@ -97,8 +98,8 @@ Cuisine.insertMany([
   },
 ])
     .then(function() {
-      console.log('Cuisine Data inserted'); // Success
+      logger.info('Cuisine Data inserted'); // Success
     })
     .catch(function(error) {
-      console.log(error); // Failure
+      logger.info(error); // Failure
     });

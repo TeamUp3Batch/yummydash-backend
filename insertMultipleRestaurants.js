@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const logger = require('./utils/logger');
 // Database connection
 mongoose.connect(
     'mongodb+srv://teamupcomit:Batch32023@cluster0.yx5dsqh.mongodb.net/yummydash',
@@ -65,8 +65,8 @@ Restaurant.insertMany([
   },
 ])
     .then(function() {
-      console.log('Restaurant Data inserted'); // Success
+      logger.info('Restaurant Data inserted'); // Success
     })
     .catch(function(error) {
-      console.log(error); // Failure
+      logger.error(error); 
     });
