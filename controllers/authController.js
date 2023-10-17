@@ -12,6 +12,15 @@ const authUser = async (req, res) => {
       const token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
         expiresIn: '1d',
       });
+      // Store user info in session
+      req.session.user = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+      };
 
       res.status(201).json({
         _id: user._id,
@@ -75,6 +84,14 @@ const registerUser = async (req, res) => {
           },
       );
 
+      // Store user information in the session after registration
+      req.session.user = {
+        _id: newSavedUser._id,
+        firstName: newSavedUser.firstName,
+        lastName: newSavedUser.lastName,
+        email: newSavedUser.email,
+        address: [],
+      };
       res.status(201).json({
         _id: newSavedUser._id,
         firstName: newSavedUser.firstName,
@@ -95,6 +112,7 @@ const registerUser = async (req, res) => {
 };
 
 const logoutUser = async (req, res) => {
+  delete req.session.user;
   res.status(201).json({
     status: 'logged out',
     token: null,
