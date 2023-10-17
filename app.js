@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const bodyParser = require('body-parser')
 const connectDB = require('./config/db')
 const usersRoutes = require('./routes/usersRoutes')
 const authRoutes = require('./routes/authRoutes')
@@ -14,8 +15,9 @@ const logger = require('./utils/logger')
 connectDB()
 
 // middlewares
-app.use(express.json())
-app.use(cors())
+app.use(bodyParser.urlencoded({ extended: false })); 
+app.use(bodyParser.json());
+app.use(cors());
 
 // routes
 app.use('/api/auth', authRoutes)
