@@ -21,6 +21,7 @@ const authUser = async (req, res) => {
         phoneNumber: user.phoneNumber,
         address: user.address,
       };
+      req.session.isAuth = true;
 
       res.status(201).json({
         _id: user._id,
@@ -92,6 +93,7 @@ const registerUser = async (req, res) => {
         email: newSavedUser.email,
         address: [],
       };
+      req.session.isAuth = true;
       res.status(201).json({
         _id: newSavedUser._id,
         firstName: newSavedUser.firstName,
@@ -113,6 +115,7 @@ const registerUser = async (req, res) => {
 
 const logoutUser = async (req, res) => {
   delete req.session.user;
+  req.session.isAuth = false;
   res.status(201).json({
     status: 'logged out',
     token: null,

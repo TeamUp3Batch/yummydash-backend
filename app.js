@@ -9,7 +9,7 @@ const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurantRoutes');
 const cuisineRoutes = require('./routes/cuisineRoutes');
 const logger = require('./utils/logger');
-const cookieSession = require('cookie-session');
+const session = require('express-session');
 
 // database connection
 
@@ -20,11 +20,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(cors());
 app.use(
-    cookieSession({
-      name: 'session', // Name of the cookie
-      keys: process.env.COOKIE_SESSION,
-      maxAge: 24 * 60 * 60 * 1000, // Session expiration time (1 day)
-      secure: false, // Set to true for HTTPS (false)
+    session({
+      secret: process.env.SESSION_SECRET,
+      cookie: {
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000,
+      },
     }),
 );
 
@@ -33,7 +34,6 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/cuisines', cuisineRoutes);
-
 
 
 // testing route
