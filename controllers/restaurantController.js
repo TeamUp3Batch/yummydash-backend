@@ -29,7 +29,7 @@ const getMenuItemsByRestaurant = async (req, res) => {
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
+      return res.status(404).json({message: 'Restaurant not found'});
     }
 
     const menuItems = restaurant.menu;
@@ -37,7 +37,7 @@ const getMenuItemsByRestaurant = async (req, res) => {
     res.json(menuItems);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
@@ -47,13 +47,43 @@ const getRestaurantDetailsById = async (req, res) => {
     const restaurant = await Restaurant.findById(restaurantId);
 
     if (!restaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
+      return res.status(404).json({message: 'Restaurant not found'});
     }
 
     res.json(restaurant);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
+
+const getRestaurantMenuByCategory = async (req, res) => {
+  try {
+    const restaurantId = req.body.id;
+    const category = req.body.category;
+
+    // First, find the restaurant by ID
+    const restaurant = await Restaurant.findById(restaurantId);
+
+    if (!restaurant) {
+      return res.status(404).json({message: 'Restaurant not found'});
+    }
+
+    // Filter menu items by the specified category
+    const menuItems = restaurant.menu.filter(
+        (item) => item.category === category,
+    );
+
+    if (menuItems.length === 0) {
+      return res.status(404).json({
+        message: `No menu items found in the category: ${category}`,
+      });
+    }
+
+    res.status(201).json({menuItems});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
@@ -61,5 +91,6 @@ module.exports = {
   getAllRestaurants,
   getRestaurantsByCuisine,
   getMenuItemsByRestaurant,
-  getRestaurantDetailsById
+  getRestaurantDetailsById,
+  getRestaurantMenuByCategory
 };
