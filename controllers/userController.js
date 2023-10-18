@@ -1,7 +1,6 @@
 const {User} = require('../models/user');
 
 const addNewUserAddress = async (req, res) => {
-
   try {
     User.findOneAndUpdate(
         {email: req.body.email},
