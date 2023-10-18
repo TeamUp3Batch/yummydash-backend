@@ -1,36 +1,36 @@
-const { User } = require("../models/user");
+const {User} = require('../models/user');
 
 const addNewUserAddress = async (req, res) => {
-  console.log("hitting add new user address");
 
   try {
-    console.log("body is", req.body);
-    console.log("email is", req.body.email);
     User.findOneAndUpdate(
-      { email: req.body.email },
-      {
-        $push: {
-          address: { unitNumber: req.body.unitNumber,
-            street: req.body.street,
-            city: req.body.city,
-            state: req.body.state,
-            zipCode: req.body.zipCode,
-            country: req.body.country },
+        {email: req.body.email},
+        {
+          $push: {
+            address: {
+              unitNumber: req.body.unitNumber,
+              street: req.body.street,
+              city: req.body.city,
+              state: req.body.state,
+              zipCode: req.body.zipCode,
+              country: req.body.country,
+            },
+          },
         },
-      },
-      { new: true, upsert: true }
+        {new: true, upsert: true},
     )
-      .then(async(result) => {
-        console.log("result",result.address);
-        res.status(201).send({ "address":result.address,"status":"successs" });
-      })
-      .catch((err) => {
-        console.log("eror mongo",err)
-        res.status(500).send({ mongoError: err });
-      });
+        .then(async (result) => {
+          res.status(201).send({
+            address: result.address,
+            status: 'successs',
+          });
+        })
+        .catch((err) => {
+          res.status(500).send({mongoError: err});
+        });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
