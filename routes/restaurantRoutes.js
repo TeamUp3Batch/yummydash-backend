@@ -11,9 +11,9 @@ const {
 
 // Route for user registration
 router.get('/getAllRestaurants', getAllRestaurants);
-router.post('/getRestaurantsByCuisine', getRestaurantsByCuisine);
-router.post('/getMenuItemsByRestaurant', getMenuItemsByRestaurant);
-router.post('/getRestaurantDetailsById', getRestaurantDetailsById);
-router.post('/getRestaurantMenuByCategory', getRestaurantMenuByCategory);
+router.get('/getRestaurantsByCuisine', getRestaurantsByCuisine);
+router.get('/getMenuItemsByRestaurant', getMenuItemsByRestaurant);
+router.get('/getRestaurantDetailsById', getRestaurantDetailsById);
+router.get('/getRestaurantMenuByCategory', getRestaurantMenuByCategory);
 
 module.exports = router;
