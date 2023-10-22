@@ -1,13 +1,15 @@
 const mongoose = require('mongoose')
 
 const cartSchema = new mongoose.Schema({
-    cartId: { type: String, required: true, unique: true },
     userId: { type: String, required: true },
     restaurantId: { type: String, required: true },
-    menuItems: [{ItemId:String,name:String,price:Number}],
+    menuItems: [{ itemId: String, name: String, perPrice: Number, price:Number, quantity: Number }],
     total: { type: Number, required: true, default: 0 },
+    cartCreationTime: { type: Date, default: Date.now },
+    checkoutTime : { type: Date }
+
 })
 
-const Cart = mongoose.model('cart', cartSchema);
+const Cart = mongoose.model('cart', cartSchema)
 
-module.exports = {Cart};
+module.exports = { Cart }

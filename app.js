@@ -8,6 +8,7 @@ const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurantRoutes');
 const cuisineRoutes = require('./routes/cuisineRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 const logger = require('./utils/logger');
 const session = require('express-session');
 
@@ -34,6 +35,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/cuisines', cuisineRoutes);
+app.use('/api/cart', cartRoutes);
 
 
 // testing route
