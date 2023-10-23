@@ -38,6 +38,7 @@ const restaurantSchema = new mongoose.Schema({
   ratings: Number,
   reviews: [],
   openingHours: {},
+  estimatedDeliveryTime:{type: String, required: false},
 });
 
 const Restaurant = mongoose.model('restaurants', restaurantSchema);
