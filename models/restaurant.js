@@ -38,6 +38,11 @@ const restaurantSchema = new mongoose.Schema({
   ratings: Number,
   reviews: [],
   openingHours: {},
+  estimateDeliveryTime: {
+    minEstimatedTime: {type: Number},
+    medEstimatedTime: {type: Number},
+    maxEstimatedTime: {type: Number},
+  },
 });
 
 const Restaurant = mongoose.model('restaurants', restaurantSchema);
