@@ -6,7 +6,12 @@ const cartSchema = new mongoose.Schema({
     menuItems: [{ itemId: String, name: String, perPrice: Number, price:Number, quantity: Number }],
     total: { type: Number, required: true, default: 0 },
     cartCreationTime: { type: Date, default: Date.now },
-    checkoutTime : { type: Date }
+    checkoutTime : { type: Date },
+    estimatedDeliveryTime : {
+        minEstimatedTime: Number,
+        medEstimatedTime: Number,
+        maxEstimatedTime: Number
+    }
 
 })
 

@@ -83,6 +83,29 @@ const addToCart = async (req, res) => {
     }
 }
 
+const removeFromCart = async(req,res) =>{
+    try {
+    const cartId = req.body.cartId;
+    const quantity = parseInt(req.body.quantity) || 1
+    const menuId = req.body.menuId;
+    if (cartId) {
+        cart = await Cart.findById(cartId)
+
+        //remove the cartItems 
+
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' })
+        }
+    }
+
+
+
+        
+    } catch (error) {
+        
+    }
+}
+
 module.exports = {
     addToCart,
 }
