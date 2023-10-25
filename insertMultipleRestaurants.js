@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const logger = require('./utils/logger');
 // Database connection
 mongoose.connect(
-    'mongodb+srv://teamupcomit:Batch32023@cluster0.yx5dsqh.mongodb.net/yummydash',
+    process.env.MONGO_URL,
     {
       useNewUrlParser: true,
     },
@@ -14,7 +14,7 @@ Restaurant.insertMany([
     name: 'Mamma Mia Trattoria',
     restaurantImage: 'https://example.com/mamma-mia-trattoria.jpg',
     description:
-            'Savor the delicious flavors of Italy at Mamma Mia Trattoria in San Francisco.',
+          'Savor the delicious flavors of Italy at Mamma Mia Trattoria in San Francisco.',
     cuisine: 'Italian',
     address: {
       street: '789 Pasta Avenue',
