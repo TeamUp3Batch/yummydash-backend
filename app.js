@@ -38,9 +38,6 @@ app.use('/api/users', usersRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/cuisines', cuisineRoutes);
 app.use('/api/cart', cartRoutes);
-// app.use('/api/getCartDetailsToCheckout', (req, res) => {
-//     res.send('Hello')
-// }
 
 // testing route
 app.get('/test', (req, res) => {
