@@ -38,7 +38,7 @@ const restaurantSchema = new mongoose.Schema({
   ratings: Number,
   reviews: [],
   openingHours: {},
-  estimateDeliveryTime: {
+  estimatedDeliveryTime: {
     minEstimatedTime: {type: Number},
     medEstimatedTime: {type: Number},
     maxEstimatedTime: {type: Number},
