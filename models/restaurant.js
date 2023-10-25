@@ -43,6 +43,7 @@ const restaurantSchema = new mongoose.Schema({
     medEstimatedTime: {type: Number},
     maxEstimatedTime: {type: Number},
   },
+
 });
 
 const Restaurant = mongoose.model('restaurants', restaurantSchema);

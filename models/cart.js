@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const cartSchema = new mongoose.Schema({
+
   userId: {type: String, required: true},
   restaurantId: {type: String, required: true},
   menuItems: [{
