@@ -42,6 +42,7 @@ const addToCart = async (req, res) => {
                 existingCartItem.price =
                     existingCartItem.quantity * menuItem.price
                 cart.total += quantity * menuItem.price
+                cart.total = parseFloat(cart.total.toFixed(2))
                 await cart.save()
             } else {
                 // If it doesn't exist, add it to the cart
@@ -49,7 +50,7 @@ const addToCart = async (req, res) => {
                     itemId: menuId,
                     name: menuItem.name,
                     perPrice: menuItem.price,
-                    price: menuItem.price * quantity,
+                    price: parseFloat((menuItem.price * quantity).toFixed(2)),
                     quantity,
                 })
                 cart.total += quantity * menuItem.price
@@ -83,29 +84,84 @@ const addToCart = async (req, res) => {
     }
 }
 
-const removeFromCart = async(req,res) =>{
+const removeFromCart = async (req, res) => {
     try {
-    const cartId = req.body.cartId;
-    const quantity = parseInt(req.body.quantity) || 1
-    const menuId = req.body.menuId;
-    if (cartId) {
-        cart = await Cart.findById(cartId)
+        const cartId = req.body.cartId
+        const quantity = parseInt(req.body.quantity) || 1
+        const menuId = req.body.menuId
+        if (cartId) {
+            cart = await Cart.findById(cartId)
+            //remove the cartItems
 
-        //remove the cartItems 
+            if (!cart) {
+                return res.status(404).json({ message: 'Cart not found' })
+            }
 
-        if (!cart) {
-            return res.status(404).json({ message: 'Cart not found' })
+            //decrease the quantity of the cart menu item
+            const existingCartItem = cart.menuItems.find(
+                (item) => item.itemId === menuId
+            )
+
+            if (existingCartItem) {
+                if (
+                    existingCartItem.quantity > 1 &&
+                    existingCartItem.quantity != quantity
+                ) {
+                    existingCartItem.quantity -= quantity
+                    existingCartItem.price =
+                        existingCartItem.quantity * existingCartItem.perPrice
+                    existingCartItem.price = parseFloat(
+                        existingCartItem.price.toFixed(2)
+                    )
+                    cart.total = parseFloat(
+                        (
+                            cart.total -
+                            quantity * existingCartItem.perPrice
+                        ).toFixed(2)
+                    )
+                    await cart.save()
+                    res.status(201).json(cart)
+                }
+
+                if (existingCartItem.quantity == quantity) {
+                    //remove the menuItem if item quantity is 1
+                    const deletedCartItem = cart.menuItems.find(
+                        (item) => item.itemId === menuId
+                    )
+                    const deletedCartItemPrice = deletedCartItem.price
+
+                    const updatedCart = await Cart.findByIdAndUpdate(
+                        cartId,
+                        {
+                            $pull: { menuItems: { itemId: menuId } },
+                        },
+                        { new: true }
+                    )
+                    //check if the cart becomes empty,if then delete the document
+                    if(updatedCart.menuItems.length == 0){
+                        await Cart.findByIdAndDelete(cartId);
+                        res.status(201).json({"message":"cart deleted"})
+                    }
+                    //update the price when the item is removed
+                    updatedCart.total = updatedCart.total - deletedCartItemPrice
+                    await updatedCart.save()
+                    res.status(201).json(updatedCart)
+
+                    if (!updatedCart) {
+                        return res
+                            .status(404)
+                            .json({ message: 'Cart item not found' })
+                    }
+                }
+            }
         }
-    }
-
-
-
-        
     } catch (error) {
-        
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
     }
 }
 
 module.exports = {
     addToCart,
+    removeFromCart,
 }
