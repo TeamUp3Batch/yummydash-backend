@@ -2,27 +2,42 @@ const {User} = require('../models/user');
 
 const addNewUserAddress = async (req, res) => {
   try {
-    User.findOneAndUpdate(
-        {email: req.body.email},
-        {
-          $push: {
-            address: {
-              unitNumber: req.body.unitNumber,
-              street: req.body.street,
-              city: req.body.city,
-              state: req.body.state,
-              zipCode: req.body.zipCode,
-              country: req.body.country,
-            },
-          },
-        },
-        {new: true, upsert: true},
-    )
-        .then(async (result) => {
-          res.status(201).send({
-            address: result.address,
-            status: 'successs',
-          });
+    // First, find the user by email and update the addresses
+    User.findOne({email: req.body.email})
+        .then(async (user) => {
+          if (!user) {
+            return res.status(404).send({message: 'User not found'});
+          }
+
+          // Create the new address object
+          const newAddress = {
+            userAddress1: req.body.userAddress1,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+            isPrimaryAddress: req.body.isPrimaryAddress,
+          };
+
+          // If the new address is set as primary,
+          // update all other addresses to false
+          if (newAddress.isPrimaryAddress) {
+            user.address.forEach((address) => {
+              address.isPrimaryAddress = false;
+            });
+          }
+
+          // Push the new address to the user's addresses
+          user.address.push(newAddress);
+          // Save the user with the updated addresses
+          user.save()
+              .then((result) => {
+                res.status(201).send({
+                  address: newAddress,
+                  status: 'success',
+                });
+              })
+              .catch((err) => {
+                res.status(500).send({mongoError: err});
+              });
         })
         .catch((err) => {
           res.status(500).send({mongoError: err});
