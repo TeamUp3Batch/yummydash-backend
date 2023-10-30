@@ -1,0 +1,23 @@
+const mongoose = require('mongoose');
+
+const cartSchema = new mongoose.Schema({
+
+  userId: {type: String, required: true},
+  restaurantId: {type: String, required: true},
+  menuItems: [{
+    itemId: {type: String},
+    name: {type: String},
+    perPrice: {type: Number},
+    price: {type: Number},
+    quantity: {type: Number}}],
+  total: {type: Number, required: true, default: 0},
+  cartCreationTime: {type: Date, default: Date.now},
+  checkoutTime: {type: Date},
+  country: {type: String},
+  currency: {type: String},
+  paymentType: {type: String},
+});
+
+const Cart = mongoose.model('cart', cartSchema);
+
+module.exports = {Cart};

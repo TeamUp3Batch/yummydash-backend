@@ -3,7 +3,7 @@ const logger = require('./utils/logger');
 
 // Database connection
 mongoose.connect(
-    'mongodb+srv://teamupcomit:Batch32023@cluster0.yx5dsqh.mongodb.net/yummydash',
+    process.env.MONGO_URL,
     {
       useNewUrlParser: true,
     },

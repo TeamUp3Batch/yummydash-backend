@@ -8,6 +8,7 @@ const usersRoutes = require('./routes/usersRoutes');
 const authRoutes = require('./routes/authRoutes');
 const restaurantRoutes = require('./routes/restaurantRoutes');
 const cuisineRoutes = require('./routes/cuisineRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 const logger = require('./utils/logger');
 const session = require('express-session');
 
@@ -26,6 +27,8 @@ app.use(
         secure: false,
         maxAge: 24 * 60 * 60 * 1000,
       },
+      resave: true,
+      saveUninitialized: true,
     }),
 );
 
@@ -34,7 +37,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/cuisines', cuisineRoutes);
-
+app.use('/api/cart', cartRoutes);
 
 // testing route
 app.get('/test', (req, res) => {
