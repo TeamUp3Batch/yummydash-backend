@@ -5,11 +5,7 @@ const {Restaurant} = require('../models/restaurant');
 const getAllRestaurants = async (req, res) => {
   try {
     // You can filter restaurants based on the area (location) here
-<<<<<<< HEAD
     const restaurants = await Restaurant.find()
-=======
-    const restaurants = await Restaurant.find();
->>>>>>> development-Urvi
     res.json(restaurants);
   } catch (error) {
     console.error(error);
@@ -25,7 +21,6 @@ const getRestaurantsByCuisine = async (req, res) => {
       return res
           .status(400)
           .json({message: 'Cuisine parameter is missing'});
-<<<<<<< HEAD
     }
 
     const byCuisine = await Restaurant.find({cuisine});
@@ -288,66 +283,11 @@ const getRestaurantDetailsById = async (req, res) => {
   try {
     const restaurantId = req.query.restaurantId;
 
-=======
-    }
-
-    const byCuisine = await Restaurant.find({cuisine});
-
-    if (!byCuisine || byCuisine.length === 0) {
-      return res.status(404).json({
-        message: 'No restaurants found for the specified cuisine',
-      });
-    }
-
-    res.status(200).json(byCuisine);
-  } catch (error) {
-    console.error('Error in getRestaurantsByCuisine:', error);
-    res.status(500).json({message: 'Internal Server Error'});
-  }
-};
-
-const getMenuItemsByRestaurant = async (req, res) => {
-  try {
-    const restaurantId = req.query.restaurantId;
-
     if (!restaurantId) {
       return res
           .status(400)
           .json({message: 'Restaurant ID parameter is missing'});
     }
-
-    const restaurant = await Restaurant.findById(restaurantId);
-
-    if (!restaurant) {
-      return res.status(404).json({message: 'Restaurant not found'});
-    }
-
-    if (!restaurant.menu || restaurant.menu.length === 0) {
-      return res.status(404).json({
-        message: 'No menu items found for the specified restaurant',
-      });
-    }
-
-    const menuItems = restaurant.menu;
-
-    res.status(200).json(menuItems);
-  } catch (error) {
-    console.error('Error in getMenuItemsByRestaurant:', error);
-    res.status(500).json({message: 'Internal Server Error'});
-  }
-};
-
-const getRestaurantDetailsById = async (req, res) => {
-  try {
-    const restaurantId = req.query.restaurantId;
-
->>>>>>> development-Urvi
-    if (!restaurantId) {
-      return res
-          .status(400)
-          .json({message: 'Restaurant ID parameter is missing'});
-    }
-<<<<<<< HEAD
 
     const restaurant = await Restaurant.findById(restaurantId);
 
@@ -362,22 +302,6 @@ const getRestaurantDetailsById = async (req, res) => {
   }
 };
 
-=======
-
-    const restaurant = await Restaurant.findById(restaurantId);
-
-    if (!restaurant) {
-      return res.status(404).json({message: 'Restaurant not found'});
-    }
-
-    res.status(200).json(restaurant);
-  } catch (error) {
-    console.error('Error in getRestaurantDetailsById:', error);
-    res.status(500).json({message: 'Internal Server Error'});
-  }
-};
-
->>>>>>> development-Urvi
 const getRestaurantMenuByCategory = async (req, res) => {
   try {
     const restaurantId = req.query.restaurantId;
@@ -399,11 +323,7 @@ const getRestaurantMenuByCategory = async (req, res) => {
       });
     }
 
-<<<<<<< HEAD
     res.status(200).json({menuItems});// Change status code to 200 for a successful GET request
-=======
-    res.status(200).json({menuItems}); // Change status code to 200 for a successful GET request
->>>>>>> development-Urvi
   } catch (error) {
     console.error(error);
     res.status(500).json({message: 'Internal Server Error'});
@@ -416,7 +336,6 @@ module.exports = {
   getMenuItemsByRestaurant,
   getRestaurantDetailsById,
   getRestaurantMenuByCategory,
-<<<<<<< HEAD
   getRestaurantsByRating,
   getRestaurantMenusByPrice,
   getRestaurantMenusBelowPrice,
@@ -424,6 +343,4 @@ module.exports = {
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
   
-=======
->>>>>>> development-Urvi
 };
