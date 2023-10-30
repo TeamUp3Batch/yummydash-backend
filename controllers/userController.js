@@ -28,19 +28,11 @@ const addNewUserAddress = async (req, res) => {
           // Push the new address to the user's addresses
           user.address.push(newAddress);
           // Save the user with the updated addresses
-          user.save()
-              .then((result) => {
-                res.status(201).send({
-                  address: newAddress,
-                  status: 'success',
-                });
-              })
-              .catch((err) => {
-                res.status(500).send({mongoError: err});
-              });
-        })
-        .catch((err) => {
-          res.status(500).send({mongoError: err});
+          user.save();
+          res.status(201).send({
+            address: user.address,
+            status: 'success',
+          });
         });
   } catch (error) {
     console.error(error);
