@@ -3,15 +3,15 @@ const { Restaurant } = require('../models/restaurant')
 // Controller function to get all restaurants in an area
 
 const getAllRestaurants = async (req, res) => {
-    try {
-        // You can filter restaurants based on the area (location) here
-        const restaurants = await Restaurant.find()
-        res.json(restaurants)
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
+  try {
+    // You can filter restaurants based on the area (location) here
+    const restaurants = await Restaurant.find();
+    res.json(restaurants);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
 
 const getRestaurantsByCuisine = async (req, res) => {
     try {
@@ -31,12 +31,12 @@ const getRestaurantsByCuisine = async (req, res) => {
             })
         }
 
-        res.status(200).json(byCuisine)
-    } catch (error) {
-        console.error('Error in getRestaurantsByCuisine:', error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
+    res.status(200).json(byCuisine);
+  } catch (error) {
+    console.error('Error in getRestaurantsByCuisine:', error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
 
 const getMenuItemsByRestaurant = async (req, res) => {
     try {
@@ -113,17 +113,17 @@ const getRestaurantMenuByCategory = async (req, res) => {
             })
         }
 
-        res.status(200).json({ menuItems }) // Change status code to 200 for a successful GET request
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
+    res.status(200).json({menuItems}); // Change status code to 200 for a successful GET request
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
 
 module.exports = {
-    getAllRestaurants,
-    getRestaurantsByCuisine,
-    getMenuItemsByRestaurant,
-    getRestaurantDetailsById,
-    getRestaurantMenuByCategory,
-}
+  getAllRestaurants,
+  getRestaurantsByCuisine,
+  getMenuItemsByRestaurant,
+  getRestaurantDetailsById,
+  getRestaurantMenuByCategory,
+};
