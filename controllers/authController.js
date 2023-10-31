@@ -52,7 +52,7 @@ const authUser = async (req, res) => {
 const registerUser = async (req, res) => {
   const {firstName, lastName, email, phoneNumber, password} = req.body;
   if (!firstName || !lastName || !email || !phoneNumber || !password) {
-    res.status(400).json({message: 'All fields are mandatory',status:false});
+    res.status(400).json({message: 'All fields are mandatory', status: false});
     return;
   }
   try {
@@ -105,7 +105,7 @@ const registerUser = async (req, res) => {
         status: true,
       });
     } else {
-      res.status(500).json({message: 'Error saving new user',status:false});
+      res.status(500).json({message: 'Error saving new user', status: false});
     }
   } catch (error) {
     console.error(error);
