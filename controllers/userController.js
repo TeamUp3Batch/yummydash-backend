@@ -57,7 +57,6 @@ const updatePrimaryAddress = async (req, res) => {
     // Find the address in the user's array and
     // update its isPrimaryAddress field
     const addressToUpdate = user.address.id(addressIdToUpdate);
-    console.log('addressToUpdate', addressToUpdate);
     if (addressToUpdate) {
       // Update the address being set as primary
       addressToUpdate.isPrimaryAddress = newAddress.isPrimaryAddress;
