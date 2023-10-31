@@ -23,18 +23,25 @@ const getRestaurantsByCuisine = async (req, res) => {
           .json({message: 'Cuisine parameter is missing'});
     }
     let byCuisine = [];
-    //if (sort && sort=='rating') {
+    if (sort && sort=='rating') {
       byCuisine = await Restaurant.find({cuisine})
-      .sort({ 'ratings': -1 });
-    //}
-    //byCuisine = await Restaurant.find({cuisine});
-
+      .sort({ ratings: -1 });
+    }
+    if (sort && sort=='duration') {
+      byCuisine = await Restaurant.aggregate([
+       { $match : { cuisine } },
+       {$unwind: '$estimatedDeliveryTime'},
+       {$sort: {'estimatedDeliveryTime.minEstimatedTime':1}}
+       ]);
+       console.log(byCuisine);
+    }else{
+      byCuisine = await Restaurant.find({cuisine});
+    }
     if (!byCuisine || byCuisine.length === 0) {
       return res.status(404).json({
         message: 'No restaurants found for the specified cuisine',
       });
     }
-
     res.status(200).json(byCuisine);
   } catch (error) {
     console.error('Error in getRestaurantsByCuisine:', error);
