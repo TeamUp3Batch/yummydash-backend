@@ -16,14 +16,18 @@ const getAllRestaurants = async (req, res) => {
 const getRestaurantsByCuisine = async (req, res) => {
   try {
     const cuisine = req.query.cuisine;
-
+    const sort = req.query.sort;
     if (!cuisine) {
       return res
           .status(400)
           .json({message: 'Cuisine parameter is missing'});
     }
-
-    const byCuisine = await Restaurant.find({cuisine});
+    let byCuisine = [];
+    //if (sort && sort=='rating') {
+      byCuisine = await Restaurant.find({cuisine})
+      .sort({ 'ratings': -1 });
+    //}
+    //byCuisine = await Restaurant.find({cuisine});
 
     if (!byCuisine || byCuisine.length === 0) {
       return res.status(404).json({
