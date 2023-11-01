@@ -9,6 +9,6 @@ const {addNewUserAddress,
 // Route for user registration
 router.post('/signup', registerUser);
 router.post('/addNewAddress', addNewUserAddress);
-router.put('/updatePrimaryAddress/:addressId', updatePrimaryAddress);
+router.post('/updatePrimaryAddress', updatePrimaryAddress);
 
 module.exports = router;
