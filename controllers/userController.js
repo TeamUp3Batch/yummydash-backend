@@ -41,35 +41,33 @@ const addNewUserAddress = async (req, res) => {
 
 const updatePrimaryAddress = async (req, res) => {
   try {
-    const user = await User.findOne({email: req.body.email});
+    const email = req.body.email;
+    const id = req.body.id;
+    if (!email || !id) {
+      return res.status(400).send({message: 'Bad Request'});
+    }
+
+    const user = await User.findOne({email});
+
     if (!user) {
       return res.status(404).send({message: 'User not found'});
     }
 
-    const addressIdToUpdate = req.body.id;
-    const newAddress = {
-      userAddress1: req.body.userAddress1,
-      latitude: req.body.latitude,
-      longitude: req.body.longitude,
-      isPrimaryAddress: req.body.isPrimaryAddress,
-    };
+    const addressToUpdate = user.address.id(id);
 
-    // Find the address in the user's array and
-    // update its isPrimaryAddress field
-    const addressToUpdate = user.address.id(addressIdToUpdate);
-    if (addressToUpdate) {
-      // Update the address being set as primary
-      addressToUpdate.isPrimaryAddress = newAddress.isPrimaryAddress;
-
-      // Set isPrimaryAddress to false for all other addresses
-      user.address.forEach((address) => {
-        if (address._id != addressToUpdate._id) {
-          address.isPrimaryAddress = false;
-        }
-      });
-    } else {
+    if (!addressToUpdate) {
       return res.status(404).send({message: 'Address not found'});
     }
+
+    // Update the address being set as primary
+    addressToUpdate.isPrimaryAddress = true;
+
+    // Set isPrimaryAddress to false for all other addresses
+    user.address.forEach((addres) => {
+      if (addres._id != id) {
+        addres.isPrimaryAddress = false;
+      }
+    });
 
     // Save the user with the updated addresses
     await user.save();
@@ -83,6 +81,7 @@ const updatePrimaryAddress = async (req, res) => {
     res.status(500).json({message: 'Internal Server Error'});
   }
 };
+
 
 module.exports = {
   addNewUserAddress,
