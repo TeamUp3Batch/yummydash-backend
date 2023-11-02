@@ -2,19 +2,17 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true },
-  password: { type: String, required: true },
-  phoneNumber: { type: String, required: false },
+  firstName: {type: String, required: true},
+  lastName: {type: String, required: true},
+  email: {type: String, required: true},
+  password: {type: String, required: true},
+  phoneNumber: {type: String, required: false},
   address: [
     {
-      unitNumber: String,
-      street: String,
-      city: String,
-      state: String,
-      zipCode: String,
-      country: String,
+      userAddress1: {type: String},
+      latitude: {type: String},
+      longitude: {type: String},
+      isPrimaryAddress: {type: Boolean},
     },
   ],
 });
