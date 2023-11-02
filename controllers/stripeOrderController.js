@@ -2,11 +2,13 @@ const Stripe = require('stripe')
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY)
 
 const placeOrderByStripe = async (req, res) => {
+  console.log("amount",req.body.amount)
     try {
         const paymentIntent = await stripe.paymentIntents.create({
-          amount: 100000, // Amount in cents
+          amount: req.body.amount, // Amount in cents
           currency: 'cad',
         });
+      
     console.log("opayment intent",paymentIntent)
         res.send({ clientSecret: paymentIntent.client_secret });
       } catch (error) {
