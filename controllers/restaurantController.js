@@ -33,7 +33,6 @@ const getRestaurantsByCuisine = async (req, res) => {
        {$unwind: '$estimatedDeliveryTime'},
        {$sort: {'estimatedDeliveryTime.minEstimatedTime':1}}
        ]);
-       console.log(byCuisine);
     }else{
       byCuisine = await Restaurant.find({cuisine});
     }
@@ -53,9 +52,7 @@ const getRestaurantsByCuisine = async (req, res) => {
 // get All reqaurant by Rating 
 
 const getRestaurantsByRating = async (req, res) => {
-  console.log('test rating');
   try {
-    console.log('test rating 1');
     const restaurants = await Restaurant.find()
       .sort({ 'ratings': -1 }); // Sort by 'ratings' in descending order
 
@@ -72,13 +69,12 @@ const getRestaurantsByRating = async (req, res) => {
   }
 };
 
-// get All reqaurants menus  by price 
+// get All restaurants menus  by price 
 
 
 
 const getRestaurantMenusByPrice = async (req, res) => {
   try {
-    console.log('test Price sorting');
     const menus = await Restaurant.find()
       .sort({ 'menu.price': 1 });
 
@@ -98,7 +94,6 @@ const getRestaurantMenusByPrice = async (req, res) => {
 const getRestaurantMenusBelowPrice = async (req, res) => {
   try {
     const maxPrice = parseFloat(req.query.maxPrice); 
-    console.log('Get menu Price  < ', maxPrice );
     
     const menus = await Restaurant.aggregate([
       {
