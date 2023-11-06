@@ -174,7 +174,7 @@ const deleteCart = async (req, res) => {
 
             return res
                 .status(200)
-                .json({ message: 'Cart deleted successfully' })
+                .json({ message: 'Cart deleted successfully', status:"success" })
         } else {
             return res.status(400).json({ message: 'Invalid cart ID' })
         }
