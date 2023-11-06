@@ -16,6 +16,11 @@ const cartSchema = new mongoose.Schema({
   country: {type: String},
   currency: {type: String},
   paymentType: {type: String},
+  orderStatus: {
+    type: String,
+    enum: ['initial', 'payment', 'acceptance', 'preparation', 'pickup', 'delivery'],
+    default: 'initial',
+  },
 });
 
 const Cart = mongoose.model('cart', cartSchema);
