@@ -162,9 +162,163 @@ const removeFromCart = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' })
     }
 }
+const updateCart = async (req, res) => {
+    try {
+      const cartId = req.body.cartId;
+      const menuId = req.body.menuId;
+      const action = req.body.action; // 'add' or 'remove'
+      const quantity = parseInt(req.body.quantity) || 1;
+  
+      if (action === 'add') {
+        // Add item to the cart
+      let cart;
 
+      if (cartId) {
+        cart = await Cart.findById(cartId);
+
+        if (!cart) {
+          return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        // Find the menu item to add to the cart
+        const restaurant = await Restaurant.findById(cart.restaurantId);
+
+        if (!restaurant) {
+          return res.status(404).json({ message: 'Restaurant not found' });
+        }
+
+        const menuItem = restaurant.menu.id(menuId);
+
+        if (!menuItem) {
+          return res.status(404).json({ message: `No menu items found with ID: ${menuId}` });
+        }
+
+        // Check if the item already exists in the cart
+        const existingCartItem = cart.menuItems.find((item) => item.itemId === menuId);
+
+        if (existingCartItem) {
+          existingCartItem.quantity += quantity;
+          existingCartItem.price = existingCartItem.quantity * menuItem.price;
+          existingCartItem.price = parseFloat(existingCartItem.price.toFixed(2));
+          cart.total += quantity * menuItem.price;
+          cart.total = parseFloat(cart.total.toFixed(2));
+          await cart.save();
+        } else {
+          // If it doesn't exist, add it to the cart
+          cart.menuItems.push({
+            itemId: menuId,
+            name: menuItem.name,
+            perPrice: menuItem.price,
+            price: parseFloat((menuItem.price * quantity).toFixed(2)),
+            quantity,
+          });
+          cart.total += quantity * menuItem.price;
+          await cart.save();
+        }
+      } else {
+        // Create a new Cart
+        const userId = req.body.userId; // Make sure you have userId in the request
+        const restaurantId = req.body.restaurantId; // Make sure you have restaurantId in the request
+
+        const restaurant = await Restaurant.findById(restaurantId);
+
+        if (!restaurant) {
+          return res.status(404).json({ message: 'Restaurant not found' });
+        }
+
+        const menuItem = restaurant.menu.id(menuId);
+
+        if (!menuItem) {
+          return res.status(404).json({ message: `No menu items found with ID: ${menuId}` });
+        }
+
+        cart = new Cart({
+          userId,
+          restaurantId,
+          menuItems: [
+            {
+              itemId: menuId,
+              name: menuItem.name,
+              perPrice: menuItem.price,
+              price: menuItem.price * quantity,
+              quantity,
+            },
+          ],
+          total: menuItem.price * quantity,
+        });
+      }
+
+      // Save or update the cart in the database
+      await cart.save();
+
+      res.status(201).json({ cart });
+  
+      } else if (action === 'remove') {
+        if (cartId) {
+          const cart = await Cart.findById(cartId);
+  
+          if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+          }
+  
+          const existingCartItem = cart.menuItems.find((item) => item.itemId === menuId);
+  
+          if (existingCartItem) {
+            if (existingCartItem.quantity > 1 && existingCartItem.quantity !== quantity) {
+              existingCartItem.quantity -= quantity;
+              existingCartItem.price = existingCartItem.quantity * existingCartItem.perPrice;
+              existingCartItem.price = parseFloat(existingCartItem.price.toFixed(2));
+              cart.total = parseFloat((cart.total - quantity * existingCartItem.perPrice).toFixed(2));
+              await cart.save();
+              res.status(201).json(cart);
+            }
+  
+            if (existingCartItem.quantity === quantity) {
+              // Remove the menuItem if item quantity is 1
+              const deletedCartItem = cart.menuItems.find((item) => item.itemId === menuId);
+              const deletedCartItemPrice = deletedCartItem.price;
+  
+              const updatedCart = await Cart.findByIdAndUpdate(
+                cartId,
+                {
+                  $pull: { menuItems: { itemId: menuId } },
+                },
+                { new: true }
+              );
+  
+              // Check if the cart becomes empty, if so, delete the document
+              if (updatedCart.menuItems.length === 0) {
+                await Cart.findByIdAndDelete(cartId);
+                return res.status(201).json({ message: 'Cart deleted' });
+              }
+  
+              // Update the price when the item is removed
+              updatedCart.total = updatedCart.total - deletedCartItemPrice;
+              await updatedCart.save();
+              res.status(201).json(updatedCart);
+  
+              if (!updatedCart) {
+                return res.status(404).json({ message: 'Cart item not found' });
+              }
+            }
+          } else {
+            res.status(404).json({ message: 'Item not found in the cart' });
+          }
+        } else {
+          res.status(404).json({ message: 'Cart not found' });
+        }
+      } else {
+        res.status(400).json({ message: 'Invalid action' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
 module.exports = {
     addToCart,
     removeFromCart,
+    updateCart
 }
 
