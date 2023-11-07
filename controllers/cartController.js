@@ -163,46 +163,117 @@ const removeFromCart = async (req, res) => {
     }
 }
 const updateCart = async (req, res) => {
-    try {
-      const cartId = req.body.cartId;
-      const menuId = req.body.menuId;
-      const quantity = parseInt(req.body.quantity) || 1;
-  
-      if (cartId) {
-        const cart = await Cart.findById(cartId);
-  
-        if (!cart) {
-          return res.status(404).json({ message: 'Cart not found' });
-        }
-  
-        const existingCartItem = cart.menuItems.find((item) => item.itemId === menuId);
-  
+  try {
+    const cartId = req.body.cartId;
+    const menuId = req.body.menuId;
+    const quantity = parseInt(req.body.quantity) || 1;
+    const userId = req.body.userId;
+
+    if (cartId) {
+      const cart = await Cart.findById(cartId);
+
+      if (!cart) {
+        return res.status(404).json({ message: 'Cart not found' });
+      }
+
+      const existingCartItem = cart.menuItems.find((item) => item.itemId === menuId);
+
+      if (quantity > 0) {
         if (existingCartItem) {
           // Update item quantity and price
           existingCartItem.quantity = quantity;
           existingCartItem.price = existingCartItem.quantity * existingCartItem.perPrice;
           existingCartItem.price = parseFloat(existingCartItem.price.toFixed(2));
-  
+        } else {
+          // Add a new item to the cart
+          const restaurantId = req.body.restaurantId;
+          const restaurant = await Restaurant.findById(restaurantId);
+
+          if (!restaurant) {
+            return res.status(404).json({ message: 'Restaurant not found' });
+          }
+
+          const menuItem = restaurant.menu.id(menuId);
+
+          if (!menuItem) {
+            return res.status(404).json({ message: `No menu items found with ID: ${menuId}` });
+          }
+
+          cart.menuItems.push({
+            itemId: menuId,
+            name: menuItem.name,
+            perPrice: menuItem.price,
+            price: menuItem.price * quantity,
+            quantity,
+          });
+        }
+
+        // Update cart total
+        cart.total = cart.menuItems.reduce(
+          (total, item) => total + item.quantity * item.perPrice,
+          0
+        );
+        cart.total = parseFloat(cart.total.toFixed(2));
+
+        await cart.save();
+        res.status(201).json(cart);
+      } else {
+        // If quantity is 0 or negative, remove the item from the cart
+        if (existingCartItem) {
+          cart.menuItems = cart.menuItems.filter((item) => item.itemId !== menuId);
+
           // Update cart total
           cart.total = cart.menuItems.reduce(
             (total, item) => total + item.quantity * item.perPrice,
             0
           );
           cart.total = parseFloat(cart.total.toFixed(2));
-  
+
           await cart.save();
           res.status(201).json(cart);
         } else {
           res.status(404).json({ message: 'Item not found in the cart' });
         }
-      } else {
-        res.status(404).json({ message: 'Cart not found' });
       }
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal Server Error' });
+    } else {
+      // Create a new Cart
+      const restaurantId = req.body.restaurantId;
+      const restaurant = await Restaurant.findById(restaurantId);
+
+      if (!restaurant) {
+        return res.status(404).json({ message: 'Restaurant not found' });
+      }
+
+      const menuItem = restaurant.menu.id(menuId);
+
+      if (!menuItem) {
+        return res.status(404).json({ message: `No menu items found with ID: ${menuId}` });
+      }
+
+      const newCart = new Cart({
+        userId,
+        restaurantId,
+        menuItems: [
+          {
+            itemId: menuId,
+            name: menuItem.name,
+            perPrice: menuItem.price,
+            price: menuItem.price * quantity,
+            quantity,
+          },
+        ],
+        total: menuItem.price * quantity,
+      });
+
+      await newCart.save();
+      res.status(201).json(newCart);
     }
-  };
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+  
   
   
 module.exports = {
