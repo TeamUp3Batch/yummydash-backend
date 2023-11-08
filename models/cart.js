@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const cartSchema = new mongoose.Schema({
-
   userId: {type: String, required: true},
   restaurantId: {type: String, required: true},
   menuItems: [{
@@ -23,6 +22,7 @@ const cartSchema = new mongoose.Schema({
   },
 });
 
-const Cart = mongoose.model('cart', cartSchema);
+const Cart = mongoose.model('cart', cartSchema)
 
-module.exports = {Cart};
+
+module.exports = { Cart }
