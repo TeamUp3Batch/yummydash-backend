@@ -70,51 +70,7 @@ const addToCart = async (req, res) => {
       });
     }
 
-            if (!cart) {
-                return res.status(404).json({ message: 'Cart not found' })
-            }
-
-            // Check if the item already exists in the cart
-            const existingCartItem = cart.menuItems.find(
-                (item) => item.itemId === menuId
-            )
-            if (existingCartItem) {
-                existingCartItem.quantity += quantity
-                existingCartItem.price =
-                    existingCartItem.quantity * menuItem.price
-                cart.total += quantity * menuItem.price
-                cart.total = parseFloat(cart.total.toFixed(2))
-                await cart.save()
-            } else {
-                // If it doesn't exist, add it to the cart
-                cart.menuItems.push({
-                    itemId: menuId,
-                    name: menuItem.name,
-                    perPrice: menuItem.price,
-                    price: parseFloat((menuItem.price * quantity).toFixed(2)),
-                    quantity,
-                })
-                cart.total += quantity * menuItem.price
-                await cart.save()
-            }
-        } else {
-            // Create a new Cart
-            cart = new Cart({
-                userId,
-                restaurantId,
-                menuItems: [
-                    {
-                        itemId: menuId,
-                        name: menuItem.name,
-                        perPrice: menuItem.price,
-                        price: menuItem.price * quantity,
-                        quantity,
-                    },
-                ],
-                total: menuItem.price * quantity,
-            })
-        }
-
+         
         // Save or update the cart in the database
         await cart.save()
 
@@ -416,6 +372,7 @@ module.exports = {
     addToCart,
     removeFromCart,
     deleteCart,
-  removeItemOrRemoveCart
+  removeItemOrRemoveCart,
+    updateCart
 }
 
