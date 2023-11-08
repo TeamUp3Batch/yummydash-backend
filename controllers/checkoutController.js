@@ -4,9 +4,7 @@ const {Restaurant} = require('../models/restaurant');
 const {User} = require('../models/user');
 
 const getCartDetailsToCheckout = async (req, res) => {
-  console.log("request cartId",req.body.cartId)
-  console.log("request restaurantId",req.body.restaurantId)
-  console.log("request userId",req.body.userId)
+
   try {
     const cartId = req.body.cartId;
     const restaurantId = req.body.restaurantId;
