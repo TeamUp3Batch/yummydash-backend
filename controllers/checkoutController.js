@@ -1,8 +1,10 @@
 
 const {Cart} = require('../models/cart');
 const {Restaurant} = require('../models/restaurant');
+const {User} = require('../models/user');
 
 const getCartDetailsToCheckout = async (req, res) => {
+
   try {
     const cartId = req.body.cartId;
     const restaurantId = req.body.restaurantId;
@@ -32,15 +34,26 @@ const getCartDetailsToCheckout = async (req, res) => {
       return res.status(400).json({error: 'restaurant not found '});
     }
 
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({error: 'restaurant not found '});
+    }
+
+    const primaryUserAddress = user.address.find((addr) => addr.isPrimaryAddress);
+
     const checkoutDetails = {
       cartId: cart._id,
       restaurantId: restaurant._id,
       userId: userId,
+      userAddress:primaryUserAddress,
       restaurantName: restaurant.name,
+      restaurantAddress: restaurant.address,
       totalprice: cart.price,
       lineItems: cart.menuItems,
       estimatedTime: restaurant.estimatedDeliveryTime.minEstimatedTime,
-      paymentType: 'CREDIT_CARD', // once map BOX is done we can add address
+      paymentType: 'CREDIT_CARD',
+      status:"success"
     };
 
     res.status(201).json(checkoutDetails);
