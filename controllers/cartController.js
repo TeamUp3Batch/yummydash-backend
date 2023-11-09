@@ -1,33 +1,33 @@
-const { Cart } = require('../models/cart')
-const { Restaurant } = require('../models/restaurant')
+const {Cart} = require('../models/cart');
+const {Restaurant} = require('../models/restaurant');
 
 const addToCart = async (req, res) => {
-    try {
-        const restaurantId = req.body.restaurantId
-        const userId = req.body.userId
-        const menuId = req.body.menuId
-        const cartId = req.body.cartId
-        const quantity = parseInt(req.body.quantity) || 1
-        const restaurant = await Restaurant.findById(restaurantId)
+  try {
+    const restaurantId = req.body.restaurantId;
+    const userId = req.body.userId;
+    const menuId = req.body.menuId;
+    const cartId = req.body.cartId;
+    const quantity = parseInt(req.body.quantity) || 1;
+    const restaurant = await Restaurant.findById(restaurantId);
 
-        if (!restaurant) {
-            return res.status(404).json({ message: 'Restaurant not found' })
-        }
+    if (!restaurant) {
+      return res.status(404).json({message: 'Restaurant not found'});
+    }
 
-        // Find the menu item to add to the cart
-        const menuItem = restaurant.menu.id(menuId)
+    // Find the menu item to add to the cart
+    const menuItem = restaurant.menu.id(menuId);
 
-        if (!menuItem) {
-            return res.status(404).json({
-                message: `No menu items found with ID: ${menuId}`,
-            })
-        }
+    if (!menuItem) {
+      return res.status(404).json({
+        message: `No menu items found with ID: ${menuId}`,
+      });
+    }
 
-        // Find or create a cart based on cartId
-        let cart
+    // Find or create a cart based on cartId
+    let cart;
 
-        if (cartId) {
-            cart = await Cart.findById(cartId)
+    if (cartId) {
+      cart = await Cart.findById(cartId);
 
       // Check if the item already exists in the cart
       const existingCartItem = cart.menuItems.find(
@@ -70,17 +70,17 @@ const addToCart = async (req, res) => {
       });
     }
 
-         
-        // Save or update the cart in the database
-        await cart.save()
+
+    // Save or update the cart in the database
+    await cart.save();
 
 
-        res.status(201).json({ cart })
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
+    res.status(201).json({cart});
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
 
 const removeFromCart = async (req, res) => {
   try {
@@ -151,8 +151,6 @@ const removeFromCart = async (req, res) => {
                 .status(404)
                 .json({message: 'Cart item not found'});
           }
-
-          
         }
       }
     }
@@ -315,11 +313,7 @@ const removeItemOrRemoveCart = async (req, res) => {
       if (removedMenuItemIndex !== -1) {
         const removedMenuItem = cart.menuItems[removedMenuItemIndex];
         cart.menuItems.splice(removedMenuItemIndex, 1);
-
-        // Update the total price based on the removed menu item
-        const reduction =
-                    removedMenuItem.price * removedMenuItem.quantity;
-        cart.total -= reduction;
+        cart.total -= removedMenuItem.price;
         cart.total = parseFloat(cart.total.toFixed(2));
       }
 
@@ -346,33 +340,33 @@ const removeItemOrRemoveCart = async (req, res) => {
 };
 
 const deleteCart = async (req, res) => {
-    try {
-        const cartId = req.body.cartId
-        if (cartId) {
-            cart = await Cart.findById(cartId)
+  try {
+    const cartId = req.body.cartId;
+    if (cartId) {
+      cart = await Cart.findById(cartId);
 
-            if (!cart) {
-                return res.status(404).json({ message: 'Cart not found' })
-            }
-            await Cart.findByIdAndRemove(cartId)
+      if (!cart) {
+        return res.status(404).json({message: 'Cart not found'});
+      }
+      await Cart.findByIdAndRemove(cartId);
 
-            return res
-                .status(200)
-                .json({ message: 'Cart deleted successfully', status:"success" })
-        } else {
-            return res.status(400).json({ message: 'Invalid cart ID' })
-        }
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
+      return res
+          .status(200)
+          .json({message: 'Cart deleted successfully', status: 'success'});
+    } else {
+      return res.status(400).json({message: 'Invalid cart ID'});
     }
-}
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
 
 module.exports = {
-    addToCart,
-    removeFromCart,
-    deleteCart,
+  addToCart,
+  removeFromCart,
+  deleteCart,
   removeItemOrRemoveCart,
-    updateCart
-}
+  updateCart,
+};
 
