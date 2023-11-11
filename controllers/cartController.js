@@ -159,13 +159,13 @@ const removeFromCart = async (req, res) => {
     res.status(500).json({message: 'Internal Server Error'});
   }
 };
+
 const updateCart = async (req, res) => {
   try {
     const cartId = req.body.cartId;
     const menuId = req.body.menuId;
     const quantity = parseInt(req.body.quantity) || 1;
     const userId = req.body.userId;
-
 
     if (cartId) {
       const cart = await Cart.findById(cartId);
@@ -289,6 +289,7 @@ const updateCart = async (req, res) => {
   }
 };
 
+
 const removeItemOrRemoveCart = async (req, res) => {
   try {
     const cartId = req.body.cartId;
@@ -362,11 +363,128 @@ const deleteCart = async (req, res) => {
   }
 };
 
+
+
+const updateOrderStatus = async (req, res) => {
+  try {
+    const cartID = req.body.cartId;
+    const restaurantId = req.body.restaurantId;
+    const userID = req.body.userId;
+    const newOrderStatus = req.body.newOrderStatus;
+
+    console.log('cartID', cartID);
+
+    if (!cartID || !restaurantId || !userID || !newOrderStatus) {
+      return res.status(400).json({ message: 'Missing required parameters' });
+    }
+
+
+    const cart = await Cart.findOne({ _id: cartID, restaurantId, userId: userID });
+
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+
+    // Update only the order status 
+    cart.orderStatus = newOrderStatus;
+
+    await cart.save();
+
+    res.status(201).json(cart);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+
+
+
+const getPendingOrdersByRestaurantId = async (req, res) => {
+  try {
+    const restaurantId = req.query.restaurantId;
+
+    console.log('TestPendingOrderStatus',restaurantId)
+    if (!restaurantId) {
+      return res.status(400).json({ message: 'Restaurant ID parameter is missing' });
+    }
+
+    const pendingOrders = await Cart.find({
+      restaurantId: restaurantId,
+      orderStatus: 'payment'
+    });
+    console.log('testpendingOrder',pendingOrders)
+
+    if (!pendingOrders || pendingOrders.length === 0) {
+      return res.status(404).json({ message: 'No pending orders found' });
+    }
+
+    res.status(200).json(pendingOrders);
+  } catch (error) {
+    console.error('Error in getPendingOrdersByRestaurantId:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getAllOrdersByRestaurantId = async (req, res) => {
+  try {
+    const restaurantId = req.query.restaurantId;
+    
+    console.log('TestPendingOrderStatus',restaurantId)
+    if (!restaurantId) {
+      return res.status(400).json({ message:'RestaurantID parameter is missing'});
+    }
+
+    const AllOrders = await Cart.find({
+      restaurantId: restaurantId,
+    });
+    console.log('testpendingOrder',AllOrders)
+
+    if (!AllOrders || AllOrders.length === 0) {
+      return res.status(404).json({ message: 'No pending orders found' });
+    }
+
+    res.status(200).json(AllOrders);
+  } catch (error) {
+    console.error('Error in getAllOrdersByRestaurantId:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getAllOrdersByUserId = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    
+    console.log('TestAllOrderByUserID',userId)
+
+    if (!userId) {
+      return res.status(400).json({ message: 'userID parameter is missing' });
+    }
+
+    const AllOrders = await Cart.find({
+      userId: userId,
+    });
+
+
+    if (!AllOrders || AllOrders.length === 0) {
+      return res.status(404).json({ message: 'No pending orders found' });
+    }
+
+    res.status(200).json(AllOrders);
+  } catch (error) {
+    console.error('Error in getAllOrdersByUserId:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 module.exports = {
   addToCart,
   removeFromCart,
   deleteCart,
   removeItemOrRemoveCart,
   updateCart,
+  updateOrderStatus,
+  getPendingOrdersByRestaurantId,
+  getAllOrdersByUserId,
+  getAllOrdersByRestaurantId
 };
 
