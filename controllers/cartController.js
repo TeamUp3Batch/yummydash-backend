@@ -372,7 +372,7 @@ const updateOrderStatus = async (req, res) => {
     const userID = req.body.userId;
     const newOrderStatus = req.body.newOrderStatus;
 
-    console.log('cartID', cartID);
+  
 
     if (!cartID || !restaurantId || !userID || !newOrderStatus) {
       return res.status(400).json({ message: 'Missing required parameters' });
@@ -404,7 +404,7 @@ const getPendingOrdersByRestaurantId = async (req, res) => {
   try {
     const restaurantId = req.query.restaurantId;
 
-    console.log('TestPendingOrderStatus',restaurantId)
+    
     if (!restaurantId) {
       return res.status(400).json({ message: 'Restaurant ID parameter is missing' });
     }
@@ -413,7 +413,7 @@ const getPendingOrdersByRestaurantId = async (req, res) => {
       restaurantId: restaurantId,
       orderStatus: 'payment'
     });
-    console.log('testpendingOrder',pendingOrders)
+   
 
     if (!pendingOrders || pendingOrders.length === 0) {
       return res.status(404).json({ message: 'No pending orders found' });
@@ -438,7 +438,7 @@ const getAllOrdersByRestaurantId = async (req, res) => {
     const AllOrders = await Cart.find({
       restaurantId: restaurantId,
     });
-    console.log('testpendingOrder',AllOrders)
+   
 
     if (!AllOrders || AllOrders.length === 0) {
       return res.status(404).json({ message: 'No pending orders found' });
@@ -455,7 +455,7 @@ const getAllOrdersByUserId = async (req, res) => {
   try {
     const userId = req.query.userId;
     
-    console.log('TestAllOrderByUserID',userId)
+ 
 
     if (!userId) {
       return res.status(400).json({ message: 'userID parameter is missing' });
