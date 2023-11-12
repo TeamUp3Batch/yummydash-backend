@@ -49,13 +49,12 @@ const getCartDetailsToCheckout = async (req, res) => {
       userAddress:primaryUserAddress,
       restaurantName: restaurant.name,
       restaurantAddress: restaurant.address,
-      totalprice: cart.price,
+      totalprice: cart.total,
       lineItems: cart.menuItems,
       estimatedTime: restaurant.estimatedDeliveryTime.minEstimatedTime,
       paymentType: 'CREDIT_CARD',
       status:"success"
     };
-
     res.status(201).json(checkoutDetails);
   } catch (error) {
     console.error('Error in getCartDetailsToCheckout:', error);
