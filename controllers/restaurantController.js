@@ -352,7 +352,4 @@ module.exports = {
   getMenusBelowDeliveryMinTime,
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
-
-  addMenuItemToRestaurant
-  
 };
