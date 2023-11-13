@@ -336,6 +336,10 @@ const getRestaurantMenuByCategory = async (req, res) => {
   }
 };
 
+
+
+
+
 module.exports = {
   getAllRestaurants,
   getRestaurantsByCuisine,
@@ -348,5 +352,4 @@ module.exports = {
   getMenusBelowDeliveryMinTime,
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
-  
 };

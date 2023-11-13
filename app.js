@@ -11,6 +11,7 @@ const cuisineRoutes = require('./routes/cuisineRoutes');
 const cartRoutes = require('./routes/cartRoutes');
 const logger = require('./utils/logger');
 const session = require('express-session');
+const menuRoutes=require('./routes/menuRoutes');
 
 // database connection
 
@@ -38,6 +39,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/restaurants', restaurantRoutes);
 app.use('/api/cuisines', cuisineRoutes);
 app.use('/api/cart', cartRoutes);
+app.use('/api/menu', menuRoutes);
 
 // testing route
 app.get('/test', (req, res) => {
