@@ -498,6 +498,31 @@ const getAllOrdersByUserId = async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+const getOrderDetailsByOrderId = async (req, res) => {
+  try {
+    const userId = req.query.userId;
+    const cartId = req.query.cartId;
+
+    if (!userId || !cartId) {
+      return res.status(400).json({ message: 'userID or cartID parameter is missing' });
+    }
+
+    const orderDetails = await Cart.findOne({
+      userId: userId,
+      _id: cartId,
+    });
+
+    if (!orderDetails) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    res.status(200).json(orderDetails);
+  } catch (error) {
+    console.error('Error in getSingleOrderDetails:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   addToCart,
   removeFromCart,
@@ -507,6 +532,7 @@ module.exports = {
   updateOrderStatus,
   getPendingOrdersByRestaurantId,
   getAllOrdersByUserId,
-  getAllOrdersByRestaurantId
+  getAllOrdersByRestaurantId,
+  getOrderDetailsByOrderId
 };
 
