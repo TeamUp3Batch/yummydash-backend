@@ -37,5 +37,5 @@ router.get('/getMenusBelowDeliveryMinTime', getMenusBelowDeliveryMinTime);
 router.get('/getMenusBelowDeliveryMedTime', getMenusBelowDeliveryMedTime);
 router.get('/getMenusBelowDeliveryMaxTime', getMenusBelowDeliveryMaxTime);
 
-router.post('/addMenuItemToRestaurant',addMenuItemToRestaurant);
+
 module.exports = router;
