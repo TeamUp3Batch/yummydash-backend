@@ -19,7 +19,7 @@ const cartSchema = new mongoose.Schema({
   paymentType: {type: String},
   orderStatus: {
     type: String,
-    enum: ['initial', 'payment', 'acceptance', 'preparation', 'pickup', 'delivery'],
+    enum: ['initial', 'payment', 'acceptance', 'preparation', 'ready', 'pickup', 'delivery'],
     default: 'initial',
   },
 });
