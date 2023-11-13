@@ -1,5 +1,6 @@
 const {Cart} = require('../models/cart');
 const {Restaurant} = require('../models/restaurant');
+const {User} = require('../models/user');
 
 const addToCart = async (req, res) => {
   try {
@@ -10,10 +11,19 @@ const addToCart = async (req, res) => {
     const quantity = parseInt(req.body.quantity) || 1;
     const restaurant = await Restaurant.findById(restaurantId);
 
+    if (!userId) {
+      return res.status(404).json({message: 'User not found'});
+    }
+
     if (!restaurant) {
       return res.status(404).json({message: 'Restaurant not found'});
     }
 
+    //find user name and contact
+    const user = await User.findById({userId});
+    const userFullName = user.firstName + " " + user.lastName;
+    const userPhone = user.phoneNumber;
+    
     // Find the menu item to add to the cart
     const menuItem = restaurant.menu.id(menuId);
 
@@ -57,6 +67,8 @@ const addToCart = async (req, res) => {
       cart = new Cart({
         userId,
         restaurantId,
+        userName:userFullName,
+        userContact:userPhone,
         menuItems: [
           {
             itemId: menuId,
@@ -264,10 +276,16 @@ const updateCart = async (req, res) => {
             .status(404)
             .json({message: `No menu items found with ID: ${menuId}`});
       }
+          //find user name and contact
+    const user = await User.findById(userId);
+    const userFullName = user.firstName + " " + user.lastName;
+    const userPhone = user.phoneNumber;
 
       const newCart = new Cart({
         userId,
         restaurantId,
+        userName:userFullName,
+        userContact:userPhone,
         menuItems: [
           {
             itemId: menuId,
