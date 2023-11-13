@@ -22,6 +22,7 @@ const cartSchema = new mongoose.Schema({
     enum: ['initial', 'payment', 'acceptance', 'preparation', 'ready', 'pickup', 'delivery'],
     default: 'initial',
   },
+  orderTracker:{}
 });
 
 const Cart = mongoose.model('cart', cartSchema)

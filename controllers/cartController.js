@@ -84,6 +84,7 @@ const addToCart = async (req, res) => {
 
 
     // Save or update the cart in the database
+    cart.orderTracker['initial'] = Date.now();
     await cart.save();
 
 
@@ -297,7 +298,8 @@ const updateCart = async (req, res) => {
         ],
         total: menuItem.price * quantity,
       });
-
+      
+      cart.orderTracker['initial'] = Date.now();
       await newCart.save();
       res.status(201).json(newCart);
     }
@@ -404,7 +406,9 @@ const updateOrderStatus = async (req, res) => {
     }
 
     // Update only the order status 
+    //added tracker
     cart.orderStatus = newOrderStatus;
+    cart.orderTracker[newOrderStatus] = Date.now();
 
     await cart.save();
 
