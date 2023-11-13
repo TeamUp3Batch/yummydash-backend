@@ -19,11 +19,15 @@ const addToCart = async (req, res) => {
       return res.status(404).json({message: 'Restaurant not found'});
     }
 
-    //find user name and contact
+    // find user name and contact
     const user = await User.findById({userId});
-    const userFullName = user.firstName + " " + user.lastName;
+    const userFullName = user.firstName + ' ' + user.lastName;
     const userPhone = user.phoneNumber;
-    
+    const primaryAddress = user.addresses.find((address) =>
+      address.isPrimaryAddress === true);
+    const userAddress = primaryAddress.userAddress1;
+
+
     // Find the menu item to add to the cart
     const menuItem = restaurant.menu.id(menuId);
 
@@ -67,8 +71,10 @@ const addToCart = async (req, res) => {
       cart = new Cart({
         userId,
         restaurantId,
-        userName:userFullName,
-        userContact:userPhone,
+        userName: userFullName,
+        userContact: userPhone,
+        userAddress: userAddress,
+        restaurantAddress: restaurant.address.address1,
         menuItems: [
           {
             itemId: menuId,
@@ -276,16 +282,22 @@ const updateCart = async (req, res) => {
             .status(404)
             .json({message: `No menu items found with ID: ${menuId}`});
       }
-          //find user name and contact
-    const user = await User.findById(userId);
-    const userFullName = user.firstName + " " + user.lastName;
-    const userPhone = user.phoneNumber;
+      // find user name and contact
+      const user = await User.findById(userId);
+      const userFullName = user.firstName + ' ' + user.lastName;
+      const userPhone = user.phoneNumber;
+
+      const primaryAddress = user.address.find((item) =>
+        item.isPrimaryAddress === true);
+      const userAddress = primaryAddress.userAddress1;
 
       const newCart = new Cart({
         userId,
         restaurantId,
-        userName:userFullName,
-        userContact:userPhone,
+        userName: userFullName,
+        userContact: userPhone,
+        userAddress: userAddress,
+        restaurantAddress: restaurant.address.address1,
         menuItems: [
           {
             itemId: menuId,
@@ -382,7 +394,6 @@ const deleteCart = async (req, res) => {
 };
 
 
-
 const updateOrderStatus = async (req, res) => {
   try {
     const cartID = req.body.cartId;
@@ -390,20 +401,19 @@ const updateOrderStatus = async (req, res) => {
     const userID = req.body.userId;
     const newOrderStatus = req.body.newOrderStatus;
 
-  
 
     if (!cartID || !restaurantId || !userID || !newOrderStatus) {
-      return res.status(400).json({ message: 'Missing required parameters' });
+      return res.status(400).json({message: 'Missing required parameters'});
     }
 
 
-    const cart = await Cart.findOne({ _id: cartID, restaurantId, userId: userID });
+    const cart = await Cart.findOne({_id: cartID, restaurantId, userId: userID});
 
     if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
+      return res.status(404).json({message: 'Cart not found'});
     }
 
-    // Update only the order status 
+    // Update only the order status
     cart.orderStatus = newOrderStatus;
 
     await cart.save();
@@ -411,72 +421,69 @@ const updateOrderStatus = async (req, res) => {
     res.status(201).json(cart);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
-
-
 
 
 const getPendingOrdersByRestaurantId = async (req, res) => {
   try {
     const restaurantId = req.query.restaurantId;
 
-    
+
     if (!restaurantId) {
-      return res.status(400).json({ message: 'Restaurant ID parameter is missing' });
+      return res.status(400).json({message: 'Restaurant ID parameter is missing'});
     }
 
     const pendingOrders = await Cart.find({
       restaurantId: restaurantId,
-      orderStatus: 'payment'
+      orderStatus: 'payment',
     });
-   
+
 
     if (!pendingOrders || pendingOrders.length === 0) {
-      return res.status(404).json({ message: 'No pending orders found' });
+      return res.status(404).json({message: 'No pending orders found'});
     }
 
     res.status(200).json(pendingOrders);
   } catch (error) {
     console.error('Error in getPendingOrdersByRestaurantId:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
 const getAllOrdersByRestaurantId = async (req, res) => {
   try {
     const restaurantId = req.query.restaurantId;
-    
-   
+
+
     if (!restaurantId) {
-      return res.status(400).json({ message:'RestaurantID parameter is missing'});
+      return res.status(400).json({message: 'RestaurantID parameter is missing'});
     }
 
     const AllOrders = await Cart.find({
       restaurantId: restaurantId,
     });
-   
+
 
     if (!AllOrders || AllOrders.length === 0) {
-      return res.status(404).json({ message: 'No pending orders found' });
+      return res.status(404).json({message: 'No pending orders found'});
     }
 
     res.status(200).json(AllOrders);
   } catch (error) {
     console.error('Error in getAllOrdersByRestaurantId:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 
 const getAllOrdersByUserId = async (req, res) => {
   try {
     const userId = req.query.userId;
-    
- 
+
 
     if (!userId) {
-      return res.status(400).json({ message: 'userID parameter is missing' });
+      return res.status(400).json({message: 'userID parameter is missing'});
     }
 
     const AllOrders = await Cart.find({
@@ -485,13 +492,13 @@ const getAllOrdersByUserId = async (req, res) => {
 
 
     if (!AllOrders || AllOrders.length === 0) {
-      return res.status(404).json({ message: 'No pending orders found' });
+      return res.status(404).json({message: 'No pending orders found'});
     }
 
     res.status(200).json(AllOrders);
   } catch (error) {
     console.error('Error in getAllOrdersByUserId:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    res.status(500).json({message: 'Internal Server Error'});
   }
 };
 module.exports = {
@@ -503,6 +510,6 @@ module.exports = {
   updateOrderStatus,
   getPendingOrdersByRestaurantId,
   getAllOrdersByUserId,
-  getAllOrdersByRestaurantId
+  getAllOrdersByRestaurantId,
 };
 
