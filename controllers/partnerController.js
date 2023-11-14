@@ -105,7 +105,6 @@ const registerPartner = async (req, res) => {
       // Generating a salt and hashing the password
       const salt = await bcrypt.genSalt(Number(process.env.SALT));
       const hashPassword = await bcrypt.hash(req.body.password, salt);
-      console.log("new partner hello")
       // Creating a new partner instance with hashed password
       const newPartner = new Partner({
         name:req.body.name,
@@ -116,7 +115,6 @@ const registerPartner = async (req, res) => {
   
       // Saving the new partner to the database
       await newPartner.save();
-      console.log("new partner 2")
       // Creating a new restaurant instance
       const newRestaurant = new Restaurant({
         name:name,
