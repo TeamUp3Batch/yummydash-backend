@@ -1,8 +1,12 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const cartSchema = new mongoose.Schema({
   userId: {type: String, required: true},
   restaurantId: {type: String, required: true},
+  userName:{type:String,required:true},
+  userContact:{type:String,required:true},
+  userAddress:{type:String,required:true},
+  restaurantAddress:{type:String,required:true},
   menuItems: [{
     itemId: {type: String},
     name: {type: String},
@@ -17,12 +21,41 @@ const cartSchema = new mongoose.Schema({
   paymentType: {type: String},
   orderStatus: {
     type: String,
-    enum: ['initial', 'payment', 'acceptance', 'preparation', 'pickup', 'delivery'],
+    enum: ['initial', 'payment', 'acceptance', 'preparation', 'ready', 'pickup', 'delivery'],
     default: 'initial',
+  },
+  orderTracker: {
+    initial: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    payment: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    acceptance: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    preparation: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    ready: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    pickup: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
+    delivery: {
+      timestamp: { type: Number },
+      status: { type: Boolean },
+    },
   },
 });
 
-const Cart = mongoose.model('cart', cartSchema)
+const Cart = mongoose.model('cart', cartSchema);
 
-
-module.exports = { Cart }
+module.exports = { Cart };
