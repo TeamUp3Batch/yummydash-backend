@@ -277,8 +277,7 @@ const getMenuItemsByRestaurant = async (req, res) => {
     }
 
     const menuItems = restaurant.menu;
-
-    res.status(200).json(menuItems);
+    res.status(200).json({menuItem:menuItems});
   } catch (error) {
     console.error('Error in getMenuItemsByRestaurant:', error);
     res.status(500).json({message: 'Internal Server Error'});
