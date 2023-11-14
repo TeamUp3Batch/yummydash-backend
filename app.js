@@ -13,6 +13,7 @@ const logger = require('./utils/logger');
 const session = require('express-session');
 const menuRoutes=require('./routes/menuRoutes');
 const driverRoutes=require('./routes/driverRoutes');
+const partnerRoutes=require('./routes/partnerRoutes');
 
 // database connection
 
@@ -42,6 +43,7 @@ app.use('/api/cuisines', cuisineRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/driver', driverRoutes);
+app.use('/api/partner',partnerRoutes);
 
 // testing route
 app.get('/test', (req, res) => {
