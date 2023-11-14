@@ -244,10 +244,15 @@ const updateOrderStatus = async (req, res) => {
 
         // Update only the order status
         //added tracker
+        if(newOrderStatus == 'pickup'){
+            if(req.body.driverId != null){
+            cart.driverId = req.body.driverId
+            }
+        }
         cart.orderStatus = newOrderStatus
         cart.orderTracker[newOrderStatus] = {
             timestamp: Date.now(),
-            status: true, // You can set this boolean value based on your requirements
+            status: true,
         }
 
         await cart.save()
