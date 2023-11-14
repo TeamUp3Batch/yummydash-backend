@@ -55,6 +55,8 @@ const cartSchema = new mongoose.Schema({
       status: { type: Boolean },
     },
   },
+  driverRating:{type:Number},
+  restaurantRating:{type:Number}
 });
 
 const Cart = mongoose.model('cart', cartSchema);
