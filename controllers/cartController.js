@@ -108,18 +108,18 @@ const updateCart = async (req, res) => {
             const user = await User.findById(userId)
             const userFullName = user.firstName + ' ' + user.lastName
             const userPhone = user.phoneNumber
-            const primaryAddress = user.addresses.find(
-                (address) => address.isPrimaryAddress === true
+            const primaryAddress = user.address.find(
+                (addres) => addres.isPrimaryAddress === true
             )
             const userAddress = primaryAddress.userAddress1
-
+            const restaurantAddress = restaurant.address.address1
             const newCart = new Cart({
                 userId,
                 restaurantId,
                 userName: userFullName,
                 userContact: userPhone,
                 userAddress: userAddress,
-                restaurantAddress: restaurant.address.address1,
+                restaurantAddress: restaurantAddress,
                 menuItems: [
                     {
                         itemId: menuId,
@@ -220,13 +220,11 @@ const deleteCart = async (req, res) => {
 }
 
 const updateOrderStatus = async (req, res) => {
-    console.log('hi i am here')
     try {
         const cartID = req.body.cartId
         const restaurantId = req.body.restaurantId
         const userID = req.body.userId
         const newOrderStatus = req.body.newOrderStatus
-        console.log('reqbody', req.body)
 
         if (!cartID || !restaurantId || !userID || !newOrderStatus) {
             return res
@@ -247,12 +245,10 @@ const updateOrderStatus = async (req, res) => {
         // Update only the order status
         //added tracker
         cart.orderStatus = newOrderStatus
-        console.log('cart', cart)
         cart.orderTracker[newOrderStatus] = {
             timestamp: Date.now(),
             status: true, // You can set this boolean value based on your requirements
         }
-        console.log('cart is', cart)
 
         await cart.save()
 

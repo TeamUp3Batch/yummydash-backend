@@ -8,8 +8,6 @@ const addMenuItemToRestaurant = async (req, res) => {
       const category = req.body.category;
       const restaurantId = req.body.restaurantId;
   
-      console.log('restaurantId', restaurantId);
-  
       if (!name || !description || !price || !category || !restaurantId) {
         return res.status(400).json({ message: 'Missing required parameters' });
       }
@@ -50,8 +48,6 @@ const addMenuItemToRestaurant = async (req, res) => {
       const category = req.body.category;
       const restaurantId = req.body.restaurantId;
       const menuID = req.body.menuID;
-  
-      console.log('restaurantId', restaurantId);
   
       if (!name || !description || !price || !category || !restaurantId || !menuID) {
         return res.status(400).json({ message: 'Missing required parameters' });
