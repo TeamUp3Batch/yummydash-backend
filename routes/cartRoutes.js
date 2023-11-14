@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {addToCart,
-  removeFromCart,
+const {
   updateCart,
   removeItemOrRemoveCart,
   updateOrderStatus,
@@ -17,8 +16,6 @@ const {deleteCart} = require('../controllers/cartController');
 
 
 // Route for user registration
-router.post('/addToCart', addToCart);
-router.post('/removeFromCart', removeFromCart);
 router.post('/checkout', getCartDetailsToCheckout);
 router.post('/placeOrder', placeOrderByStripe);
 router.post('/updateCart', updateCart );

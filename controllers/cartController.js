@@ -2,177 +2,6 @@ const { Cart } = require('../models/cart')
 const { Restaurant } = require('../models/restaurant')
 const { User } = require('../models/user')
 
-const addToCart = async (req, res) => {
-    try {
-        const restaurantId = req.body.restaurantId
-        const userId = req.body.userId
-        const menuId = req.body.menuId
-        const cartId = req.body.cartId
-        const quantity = parseInt(req.body.quantity) || 1
-        const restaurant = await Restaurant.findById(restaurantId)
-
-        if (!userId) {
-            return res.status(404).json({ message: 'User not found' })
-        }
-
-        if (!restaurant) {
-            return res.status(404).json({ message: 'Restaurant not found' })
-        }
-
-        //find user name and contact
-        const user = await User.findById({ userId })
-        const userFullName = user.firstName + ' ' + user.lastName
-        const userPhone = user.phoneNumber
-
-        // Find the menu item to add to the cart
-        const menuItem = restaurant.menu.id(menuId)
-
-        if (!menuItem) {
-            return res.status(404).json({
-                message: `No menu items found with ID: ${menuId}`,
-            })
-        }
-
-        // Find or create a cart based on cartId
-        let cart
-
-        if (cartId) {
-            cart = await Cart.findById(cartId)
-
-            // Check if the item already exists in the cart
-            const existingCartItem = cart.menuItems.find(
-                (item) => item.itemId === menuId
-            )
-            if (existingCartItem) {
-                existingCartItem.quantity += quantity
-                existingCartItem.price =
-                    existingCartItem.quantity * menuItem.price
-                cart.total += quantity * menuItem.price
-                cart.total = parseFloat(cart.total.toFixed(2))
-                await cart.save()
-            } else {
-                // If it doesn't exist, add it to the cart
-                cart.menuItems.push({
-                    itemId: menuId,
-                    name: menuItem.name,
-                    perPrice: menuItem.price,
-                    price: parseFloat((menuItem.price * quantity).toFixed(2)),
-                    quantity,
-                })
-                cart.total += quantity * menuItem.price
-                await cart.save()
-            }
-        } else {
-            // Create a new Cart
-            cart = new Cart({
-                userId,
-                restaurantId,
-                userName: userFullName,
-                userContact: userPhone,
-                menuItems: [
-                    {
-                        itemId: menuId,
-                        name: menuItem.name,
-                        perPrice: menuItem.price,
-                        price: menuItem.price * quantity,
-                        quantity,
-                    },
-                ],
-                total: menuItem.price * quantity,
-            })
-        }
-
-        // Save or update the cart in the database
-        cart.orderTracker[newOrderStatus] = {
-          timestamp: Date.now(),
-          status: true, // You can set this boolean value based on your requirements
-        };
-        await cart.save()
-
-        res.status(201).json({ cart })
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
-
-const removeFromCart = async (req, res) => {
-    try {
-        const cartId = req.body.cartId
-        const quantity = parseInt(req.body.quantity) || 1
-        const menuId = req.body.menuId
-        if (cartId) {
-            cart = await Cart.findById(cartId)
-            // remove the cartItems
-
-            if (!cart) {
-                return res.status(404).json({ message: 'Cart not found' })
-            }
-
-            // decrease the quantity of the cart menu item
-            const existingCartItem = cart.menuItems.find(
-                (item) => item.itemId === menuId
-            )
-
-            if (existingCartItem) {
-                if (
-                    existingCartItem.quantity > 1 &&
-                    existingCartItem.quantity != quantity
-                ) {
-                    existingCartItem.quantity -= quantity
-                    existingCartItem.price =
-                        existingCartItem.quantity * existingCartItem.perPrice
-                    existingCartItem.price = parseFloat(
-                        existingCartItem.price.toFixed(2)
-                    )
-                    cart.total = parseFloat(
-                        (
-                            cart.total -
-                            quantity * existingCartItem.perPrice
-                        ).toFixed(2)
-                    )
-                    await cart.save()
-                    res.status(201).json(cart)
-                }
-
-                if (existingCartItem.quantity == quantity) {
-                    // remove the menuItem if item quantity is 1
-                    const deletedCartItem = cart.menuItems.find(
-                        (item) => item.itemId === menuId
-                    )
-                    const deletedCartItemPrice = deletedCartItem.price
-
-                    const updatedCart = await Cart.findByIdAndUpdate(
-                        cartId,
-                        {
-                            $pull: { menuItems: { itemId: menuId } },
-                        },
-                        { new: true }
-                    )
-                    // check if the cart becomes empty,if then delete the document
-                    if (updatedCart.menuItems.length == 0) {
-                        await Cart.findByIdAndDelete(cartId)
-                        res.status(201).json({ message: 'cart deleted' })
-                    }
-                    // update the price when the item is removed
-                    updatedCart.total = updatedCart.total - deletedCartItemPrice
-                    await updatedCart.save()
-                    res.status(201).json(updatedCart)
-
-                    if (!updatedCart) {
-                        return res
-                            .status(404)
-                            .json({ message: 'Cart item not found' })
-                    }
-                }
-            }
-        }
-    } catch (error) {
-        console.error(error)
-        res.status(500).json({ message: 'Internal Server Error' })
-    }
-}
-
 const updateCart = async (req, res) => {
     try {
         const cartId = req.body.cartId
@@ -279,12 +108,18 @@ const updateCart = async (req, res) => {
             const user = await User.findById(userId)
             const userFullName = user.firstName + ' ' + user.lastName
             const userPhone = user.phoneNumber
+            const primaryAddress = user.addresses.find(
+                (address) => address.isPrimaryAddress === true
+            )
+            const userAddress = primaryAddress.userAddress1
 
             const newCart = new Cart({
                 userId,
                 restaurantId,
                 userName: userFullName,
                 userContact: userPhone,
+                userAddress: userAddress,
+                restaurantAddress: restaurant.address.address1,
                 menuItems: [
                     {
                         itemId: menuId,
@@ -296,11 +131,11 @@ const updateCart = async (req, res) => {
                 ],
                 total: menuItem.price * quantity,
             })
-            
+
             newCart.orderTracker['initial'] = {
-              timestamp: Date.now(),
-              status: true, 
-            };
+                timestamp: Date.now(),
+                status: true,
+            }
             await newCart.save()
             res.status(201).json(newCart)
         }
@@ -371,12 +206,10 @@ const deleteCart = async (req, res) => {
             }
             await Cart.findByIdAndRemove(cartId)
 
-            return res
-                .status(200)
-                .json({
-                    message: 'Cart deleted successfully',
-                    status: 'success',
-                })
+            return res.status(200).json({
+                message: 'Cart deleted successfully',
+                status: 'success',
+            })
         } else {
             return res.status(400).json({ message: 'Invalid cart ID' })
         }
@@ -387,13 +220,13 @@ const deleteCart = async (req, res) => {
 }
 
 const updateOrderStatus = async (req, res) => {
-  console.log("hi i am here")
+    console.log('hi i am here')
     try {
         const cartID = req.body.cartId
         const restaurantId = req.body.restaurantId
         const userID = req.body.userId
         const newOrderStatus = req.body.newOrderStatus
-        console.log("reqbody",req.body)
+        console.log('reqbody', req.body)
 
         if (!cartID || !restaurantId || !userID || !newOrderStatus) {
             return res
@@ -414,12 +247,12 @@ const updateOrderStatus = async (req, res) => {
         // Update only the order status
         //added tracker
         cart.orderStatus = newOrderStatus
-        console.log("cart",cart)
+        console.log('cart', cart)
         cart.orderTracker[newOrderStatus] = {
-          timestamp: Date.now(),
-          status: true, // You can set this boolean value based on your requirements
-        };
-        console.log("cart is",cart)
+            timestamp: Date.now(),
+            status: true, // You can set this boolean value based on your requirements
+        }
+        console.log('cart is', cart)
 
         await cart.save()
 
@@ -533,8 +366,6 @@ const getOrderDetailsByOrderId = async (req, res) => {
 }
 
 module.exports = {
-    addToCart,
-    removeFromCart,
     deleteCart,
     removeItemOrRemoveCart,
     updateCart,
