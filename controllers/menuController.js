@@ -40,7 +40,7 @@ const addMenuItemToRestaurant = async (req, res) => {
 
 
 
-  const UpdateMenuItemToRestaurant = async (req, res) => {
+  const updateMenuItemToRestaurant = async (req, res) => {
     try {
       const name = req.body.name;
       const description = req.body.description;
@@ -90,14 +90,15 @@ const addMenuItemToRestaurant = async (req, res) => {
       if (restaurantId && menuID) {
        
         const result = await Restaurant.findByIdAndUpdate(restaurantId, {
-          $pull: { menu: { _id: menuID } },
-        });
-  
+            $pull: { menu: { _id: menuID } },
+          },
+          { new: true } 
+        );
         if (!result) {
           return res.status(404).json({ message: 'Menu item not found' });
         }
   
-        return res.status(200).json({ message: 'Menu item deleted successfully', status: 'success' });
+        return res.status(200).json({ message: 'Menu item deleted successfully', status: 'success' , menu : result.menu});
       } else {
         return res.status(400).json({ message: 'Invalid parameters' });
       }
@@ -112,7 +113,7 @@ const addMenuItemToRestaurant = async (req, res) => {
   module.exports = {
 
     addMenuItemToRestaurant,
-    UpdateMenuItemToRestaurant,
+    updateMenuItemToRestaurant,
     deleteMenuItem
     
   };
