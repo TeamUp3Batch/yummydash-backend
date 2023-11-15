@@ -1,6 +1,7 @@
 const { Cart } = require('../models/cart')
 const { Restaurant } = require('../models/restaurant')
 const { User } = require('../models/user')
+const { Driver } = require('../models/driver')
 
 const updateCart = async (req, res) => {
     try {
@@ -248,6 +249,16 @@ const updateOrderStatus = async (req, res) => {
             
             if (req.body.driverId !== null) {
                 cart.driverId = req.body.driverId;
+            }
+        }
+        if (typeof newOrderStatus === 'string' && newOrderStatus === 'delivery') {
+            
+            if (req.body.driverId !== null) {
+                const driverProfile = await Driver.findById(driverId)
+                driverProfile.ordersDelivered += 1;
+                await driverProfile.save()
+
+
             }
         }
         cart.orderStatus = newOrderStatus
