@@ -365,7 +365,85 @@ const getOrderDetailsByOrderId = async (req, res) => {
         console.error('Error in getSingleOrderDetails:', error)
         res.status(500).json({ message: 'Internal Server Error' })
     }
-}
+};
+
+
+const updateDriverRatingByUser = async (req, res) => {
+    try {
+        const { cartId, userId, driverId, driverRating } = req.body;
+
+        // Check for missing required parameters
+        if (!cartId || !userId || !driverId ||!driverRating ) {
+            return res.status(400).json({ message: 'Missing required parameters' });
+        }
+
+        // Find the cart based on cartId and userId
+        const cart = await Cart.findOne({
+            _id: cartId,
+            userId: userId,
+        });
+
+        // Return 404 if cart is not found
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        // Update driverId and driverRating if orderStatus is 'delivery'
+        if (cart.orderStatus === 'delivery' && cart.driverId !== null) {
+            cart.driverRating = driverRating;
+            await cart.save();
+        } else {
+          
+            return res.status(400).json({ message: 'Invalid orderStatus or missing driverId' });
+        }
+
+        // Return the updated cart in the response
+        res.status(201).json(cart);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+const updateRestaurantRatingByUser = async (req, res) => {
+    try {
+        const { cartId,userId, restaurantId, restaurantRating } = req.body;
+
+        // Check for missing required parameters
+        if (!cartId || !userId || !restaurantId ||!restaurantRating ) {
+            return res.status(400).json({ message: 'Missing required parameters' });
+        }
+
+        // Find the cart based on cartId and userId
+        const cart = await Cart.findOne({
+            _id: cartId, 
+            userId: userId,
+            restaurantId: restaurantId,
+        });
+
+        // Return 404 if cart is not found
+        if (!cart) {
+            return res.status(404).json({ message: 'Cart not found' });
+        }
+
+        // Update driverId and driverRating if orderStatus is 'delivery'
+        if (cart.orderStatus === 'delivery' && cart.restaurantId !== null) {
+            cart.restaurantRating = restaurantRating;
+            await cart.save();
+        } else {
+          
+            return res.status(400).json({ message: 'Invalid orderStatus or missing driverId' });
+        }
+
+        // Return the updated cart in the response
+        res.status(201).json(cart);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 
 module.exports = {
     deleteCart,
@@ -376,4 +454,6 @@ module.exports = {
     getAllOrdersByUserId,
     getAllOrdersByRestaurantId,
     getOrderDetailsByOrderId,
+    updateDriverRatingByUser,
+    updateRestaurantRatingByUser
 }
