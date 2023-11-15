@@ -188,9 +188,10 @@ const getOrdersCompletedByDriver = async (req, res) => {
               .json({ message: 'driverId parameter is missing' });
       }
 
-      const orderDetails = await Cart.findById(driverId, {
-          orderStatus: orderStatus,
-      });
+      const orderDetails = await Cart.findOne({
+        driverId: driverId,
+        orderStatus: orderStatus,
+    })
 
       if (!orderDetails) {
           return res
