@@ -339,6 +339,8 @@ const getRestaurantMenuByCategory = async (req, res) => {
 
 
 
+
+
 module.exports = {
   getAllRestaurants,
   getRestaurantsByCuisine,
