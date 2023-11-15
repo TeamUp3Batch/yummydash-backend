@@ -3,12 +3,12 @@ const router = express.Router();
 
 const {
 addMenuItemToRestaurant,
-UpdateMenuItemToRestaurant,
+updateMenuItemToRestaurant,
 deleteMenuItem
     
   
   } = require('../controllers/menuController');
 router.post('/addMenuItemToRestaurant',addMenuItemToRestaurant);
-router.post('/UpdateMenuItemToRestaurant',UpdateMenuItemToRestaurant);
+router.post('/updateMenuItemToRestaurant',updateMenuItemToRestaurant);
 router.post('/deleteMenuItem',deleteMenuItem);
 module.exports = router;
