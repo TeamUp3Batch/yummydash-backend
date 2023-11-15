@@ -98,8 +98,7 @@ const addMenuItemToRestaurant = async (req, res) => {
           return res.status(404).json({ message: 'Menu item not found' });
         }
 
-        const restaurant = await Restaurant.findById(restaurantId);
-        const menuItems = restaurant.menu;
+      
         //return rest of menuItems
         return res.status(200).json({ message: 'Menu item deleted successfully', status: 'success' , menu : result.menu});
 
