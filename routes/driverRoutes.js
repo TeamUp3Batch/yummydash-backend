@@ -5,7 +5,11 @@ const {
 
   authDriver,
   registerDriver, 
-  logoutDriver 
+  logoutDriver,
+  getOrdersPickedByDriver,
+  getOrdersCompletedByDriver,
+  getDriverProfile,
+  getReadyOrders
 
 } = require('../controllers/driverController');
 const protect = require('../middleware/authMiddleware');
@@ -14,6 +18,10 @@ const protect = require('../middleware/authMiddleware');
 router.post('/login', authDriver);
 router.post('/registerDriver', registerDriver);
 router.post('/logout', logoutDriver);
+router.get('/getOrdersPickedByDriver',getOrdersPickedByDriver);
+router.get('/getOrdersCompletedByDriver',getOrdersCompletedByDriver)
+router.get('/getDriverProfile',getDriverProfile)
+router.get('/getReadyOrders',getReadyOrders);
 
 module.exports = router;
 
