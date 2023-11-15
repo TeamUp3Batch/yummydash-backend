@@ -405,7 +405,7 @@ const updateDriverRatingByUser = async (req, res) => {
 };
 
 
-const updateRestauarantRatingByUser = async (req, res) => {
+const updateRestaurantRatingByUser = async (req, res) => {
     try {
         const { cartId,userId, restaurantId, restaurantRating } = req.body;
 
@@ -454,5 +454,5 @@ module.exports = {
     getAllOrdersByRestaurantId,
     getOrderDetailsByOrderId,
     updateDriverRatingByUser,
-    updateRestauarantRatingByUser
+    updateRestaurantRatingByUser
 }

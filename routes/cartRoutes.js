@@ -9,7 +9,7 @@ const {
   getAllOrdersByRestaurantId,
   getOrderDetailsByOrderId ,
   updateDriverRatingByUser,
-  updateRestauarantRatingByUser,
+  updateRestaurantRatingByUser,
 } = require('../controllers/cartController');
 const {placeOrderByStripe} = require('../controllers/stripeOrderController');
 const {getCartDetailsToCheckout} = require('../controllers/checkoutController');
@@ -27,7 +27,7 @@ router.post('/deleteCart',deleteCart);
 router.post('/updateOrderStatus', updateOrderStatus);
 
 router.post('/updateDriverRatingByUser', updateDriverRatingByUser);
-router.post('/updateRestauarantRatingByUser', updateRestauarantRatingByUser);
+router.post('/updateRestaurantRatingByUser', updateRestaurantRatingByUser);
 
 router.get('/getPendingOrdersByRestaurantId', getPendingOrdersByRestaurantId);
 router.get('/getAllOrdersByUserId', getAllOrdersByUserId);
