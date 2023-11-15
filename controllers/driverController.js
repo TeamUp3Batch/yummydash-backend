@@ -156,18 +156,16 @@ const getOrdersPickedByDriver = async (req, res) => {
                 .json({ message: 'driverId parameter is missing' })
         }
 
-        const orderDetails = await Cart.findOne({
+        const orderDetails = await Cart.find({
             driverId: driverId,
             orderStatus: orderStatus,
         })
 
         if (!orderDetails) {
-            return res
-                .status(404)
-                .json({
-                    message: 'No Pickup orders for this driver',
-                    status: false,
-                })
+            return res.status(404).json({
+                message: 'No Pickup orders for this driver',
+                status: false,
+            })
         }
 
         res.status(200).json({ orders: orderDetails, status: true })
@@ -178,90 +176,117 @@ const getOrdersPickedByDriver = async (req, res) => {
 }
 
 const getOrdersCompletedByDriver = async (req, res) => {
+    try {
+        const driverId = req.query.driverId
+        const orderStatus = 'delivery'
+
+        if (!driverId) {
+            return res
+                .status(400)
+                .json({ message: 'driverId parameter is missing' })
+        }
+
+        const orderDetails = await Cart.find({
+            driverId: driverId,
+            orderStatus: orderStatus,
+        })
+
+        if (!orderDetails) {
+            return res.status(404).json({
+                message: 'No Delivery orders for this driver',
+                status: false,
+            })
+        }
+
+        res.status(200).json({ orders: orderDetails, status: true })
+    } catch (error) {
+        console.error('Error in getting orders delivered by driver:', error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+}
+
+const getDriverProfile = async (req, res) => {
+    try {
+        const driverId = req.query.driverId
+
+        if (!driverId) {
+            return res
+                .status(400)
+                .json({ message: 'userId parameter is missing' })
+        }
+
+        const driverProfile = await Driver.findById(driverId)
+
+        if (!driverProfile) {
+            return res.status(404).json({
+                message: 'No Profile for this driver',
+                status: false,
+            })
+        }
+
+        res.status(200).json({ driverProfile: driverProfile, status: true })
+    } catch (error) {
+        console.error('Error in getting profile of driver:', error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+}
+
+const getReadyOrders = async (req, res) => {
+    try {
+        const orderStatus = 'ready'
+        const orderDetails = await Cart.find({
+            orderStatus: orderStatus,
+        })
+
+        if (!orderDetails) {
+            return res.status(404).json({
+                message: 'No Ready Orders',
+                status: false,
+            })
+        }
+
+        res.status(200).json({ orders: orderDetails, status: true })
+    } catch (error) {
+        console.error('Error in getting ready orders:', error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+}
+
+const updateOrdersDeliveredByDriver = async(req,res) =>{
+
   try {
-      const driverId = req.query.driverId;
-      const orderStatus = 'delivery';
+    const driverId = req.post.driverId
+    const orderStatus = 'delivery'
 
-      if (!driverId) {
-          return res
-              .status(400)
-              .json({ message: 'driverId parameter is missing' });
-      }
+    if (!driverId) {
+        return res
+            .status(400)
+            .json({ message: 'driverId parameter is missing' })
+    }
 
-      const orderDetails = await Cart.findOne({
+    const orderDetails = await Cart.find({
         driverId: driverId,
         orderStatus: orderStatus,
     })
 
-      if (!orderDetails) {
-          return res
-              .status(404)
-              .json({
-                  message: 'No Delivery orders for this driver',
-                  status: false,
-              });
-      }
+    if (!orderDetails) {
+        return res.status(404).json({
+            message: 'No Delivery orders for this driver',
+            status: false,
+        })
+    }
+    const driverProfile = await Driver.findById(driverId)
+    const numberOfDeliveries = orderDetails.length;
+    driverProfile.ordersDelivered = numberOfDeliveries
+    await driverProfile.save();
 
-      res.status(200).json({ orders: orderDetails, status: true });
-  } catch (error) {
-      console.error('Error in getting orders delivered by driver:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-
-const getDriverProfile = async (req, res) => {
-  try {
-      const driverId = req.query.driverId;
-
-      if (!driverId) {
-          return res
-              .status(400)
-              .json({ message: 'userId parameter is missing' });
-      }
-
-      const driverProfile = await Driver.findById(driverId);
-
-      if (!driverProfile) {
-          return res
-              .status(404)
-              .json({
-                  message: 'No Profile for this driver',
-                  status: false,
-              });
-      }
-
-      res.status(200).json({ driverProfile: driverProfile, status: true });
-  } catch (error) {
-      console.error('Error in getting profile of driver:', error);
-      res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
-
-const getReadyOrders = async (req, res) => {
-  try {
-      const orderStatus = 'ready'
-      const orderDetails = await Cart.find({
-          orderStatus: orderStatus,
-      })
-
-      if (!orderDetails) {
-          return res
-              .status(404)
-              .json({
-                  message: 'No Ready Orders',
-                  status: false,
-              })
-      }
-
-      res.status(200).json({ orders: orderDetails, status: true })
-  } catch (error) {
-      console.error('Error in getting ready orders:', error)
-      res.status(500).json({ message: 'Internal Server Error' })
-  }
+    res.status(200).json({ driverProfile: driverProfile })
+} catch (error) {
+    console.error('Error in getting orders delivered by driver:', error)
+    res.status(500).json({ message: 'Internal Server Error' })
 }
 
-
+}
 
 module.exports = {
     authDriver,
@@ -270,5 +295,6 @@ module.exports = {
     getOrdersPickedByDriver,
     getOrdersCompletedByDriver,
     getDriverProfile,
-    getReadyOrders
+    getReadyOrders,
+    updateOrdersDeliveredByDriver
 }
