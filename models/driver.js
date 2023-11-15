@@ -7,7 +7,7 @@ const driverSchema = new mongoose.Schema({
   email: {type: String, required: true},
   password: {type: String, required: true},
   phoneNumber: {type: String, required: false},
-  ordersDelivered: {type:Number},
+  ordersDelivered: {type:Number, default: 0},
   userRating:{type:Number}
 
 });

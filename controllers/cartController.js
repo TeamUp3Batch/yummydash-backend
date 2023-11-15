@@ -254,7 +254,7 @@ const updateOrderStatus = async (req, res) => {
         if (typeof newOrderStatus === 'string' && newOrderStatus === 'delivery') {
             
             if (req.body.driverId !== null) {
-                const driverProfile = await Driver.findById(driverId)
+                const driverProfile = await Driver.findById(req.body.driverId)
                 driverProfile.ordersDelivered += 1;
                 await driverProfile.save()
 
