@@ -93,10 +93,22 @@ const registerPartner = async (req, res) => {
   
         // Save the partner with updated restaurantId
         await partner.save();
+        const token = jwt.sign(
+          { _id: partner._id },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: '7d',
+          },
+        );
   
         res.status(200).json({
           message: 'Restaurant details already exist',
-          restaurant: existingRestaurant,
+          _id: partner._id,
+          name: partner.name,
+          email: partner.email,
+          phoneNumber: partner.phoneNumber,
+          restaurantId: partner.restaurantId,
+          token,
           status: true,
         });
         return;
