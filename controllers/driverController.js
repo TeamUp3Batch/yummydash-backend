@@ -289,7 +289,7 @@ const updateOrdersDeliveredByDriver = async (req, res) => {
 const updateDriverRating = async (req, res) => {
     try {
         const driverId = req.body.driverId
-        console.log('driverId', driverId)
+    
 
         if (!driverId) {
             return res
