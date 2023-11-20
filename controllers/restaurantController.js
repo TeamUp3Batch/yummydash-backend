@@ -1,4 +1,5 @@
 const {Restaurant} = require('../models/restaurant');
+const { Cart } = require('../models/cart')
 
 // Controller function to get all restaurants in an area
 
@@ -335,6 +336,67 @@ const getRestaurantMenuByCategory = async (req, res) => {
   }
 };
 
+const updateRestaurantRating = async(req,res) =>{
+  try {
+    const restaurantId = req.body.restaurantId
+    const orderStatus = 'delivery'
+
+    if (!restaurantId) {
+        return res
+            .status(400)
+            .json({ message: 'restaurantId parameter is missing' })
+    }
+
+    const orderDetails = await Cart.find({
+      restaurantId: restaurantId,
+        orderStatus: orderStatus,
+    })
+
+    if (!orderDetails) {
+        return res.status(404).json({
+            message: 'No Delivery orders for this restaurant',
+            status: false,
+        })
+    }
+    const restaurantProfile = await Restaurant.findById(restaurantId)
+    const ratingsByRestaurant = await Cart.aggregate([
+              {
+                  $match: { restaurantId: restaurantId, orderStatus: 'delivery' }, // Match carts for the specific driver and delivery status
+              },
+              {
+                  $group: {
+                      _id: null,
+                      totalCarts: { $sum: 1 }, // Calculate the total number of carts delivered by the driver
+                      totalRatings: { $sum: '$restaurantRating' }, // Calculate the total sum of driver ratings
+                  },
+              },
+              {
+                  $project: {
+                      _id: 0,
+                      totalCarts: 1,
+                      totalRatings: 1,
+                      averageRating: {
+                          $round: [
+                              { $divide: ['$totalRatings', '$totalCarts'] },
+                              1,
+                          ],
+                      },
+                  },
+              },
+          ])
+
+          restaurantProfile.ratings = ratingsByRestaurant[0].averageRating
+          await restaurantProfile.save()
+
+    res.status(200).json({ restaurantProfile: restaurantProfile })
+
+}
+catch (error) {
+  console.error('Error in updating restaurant Rating:', error)
+  res.status(500).json({ message: 'Internal Server Error' })
+}
+}
+
 
 
 
@@ -353,4 +415,5 @@ module.exports = {
   getMenusBelowDeliveryMinTime,
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
+  updateRestaurantRating,
 };
