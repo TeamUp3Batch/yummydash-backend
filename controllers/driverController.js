@@ -252,40 +252,85 @@ const getReadyOrders = async (req, res) => {
     }
 }
 
-const updateOrdersDeliveredByDriver = async(req,res) =>{
+const updateOrdersDeliveredByDriver = async (req, res) => {
+    try {
+        const driverId = req.post.driverId
+        const orderStatus = 'delivery'
 
-  try {
-    const driverId = req.post.driverId
-    const orderStatus = 'delivery'
+        if (!driverId) {
+            return res
+                .status(400)
+                .json({ message: 'driverId parameter is missing' })
+        }
 
-    if (!driverId) {
-        return res
-            .status(400)
-            .json({ message: 'driverId parameter is missing' })
-    }
-
-    const orderDetails = await Cart.find({
-        driverId: driverId,
-        orderStatus: orderStatus,
-    })
-
-    if (!orderDetails) {
-        return res.status(404).json({
-            message: 'No Delivery orders for this driver',
-            status: false,
+        const orderDetails = await Cart.find({
+            driverId: driverId,
+            orderStatus: orderStatus,
         })
-    }
-    const driverProfile = await Driver.findById(driverId)
-    const numberOfDeliveries = orderDetails.length;
-    driverProfile.ordersDelivered = numberOfDeliveries
-    await driverProfile.save();
 
-    res.status(200).json({ driverProfile: driverProfile })
-} catch (error) {
-    console.error('Error in getting orders delivered by driver:', error)
-    res.status(500).json({ message: 'Internal Server Error' })
+        if (!orderDetails) {
+            return res.status(404).json({
+                message: 'No Delivery orders for this driver',
+                status: false,
+            })
+        }
+        const driverProfile = await Driver.findById(driverId)
+        const numberOfDeliveries = orderDetails.length
+        driverProfile.ordersDelivered = numberOfDeliveries
+        await driverProfile.save()
+
+        res.status(200).json({ driverProfile: driverProfile })
+    } catch (error) {
+        console.error('Error in getting orders delivered by driver:', error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
 }
 
+const updateDriverRating = async (req, res) => {
+    try {
+        const driverId = req.body.driverId
+        console.log('driverId', driverId)
+
+        if (!driverId) {
+            return res
+                .status(400)
+                .json({ message: 'driverId parameter is missing' })
+        }
+        const driverProfile = await Driver.findById(driverId)
+        const ratingsByDriver = await Cart.aggregate([
+            {
+                $match: { driverId: driverId, orderStatus: 'delivery' }, // Match carts for the specific driver and delivery status
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalCarts: { $sum: 1 }, // Calculate the total number of carts delivered by the driver
+                    totalRatings: { $sum: '$driverRating' }, // Calculate the total sum of driver ratings
+                },
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalCarts: 1,
+                    totalRatings: 1,
+                    averageRating: {
+                        $round: [
+                            { $divide: ['$totalRatings', '$totalCarts'] },
+                            1,
+                        ],
+                    }, // Calculate the average rating
+                },
+            },
+        ])
+
+        driverProfile.userRating = ratingsByDriver[0].averageRating
+        await driverProfile.save()
+
+        res.status(200).json({ driverProfile: driverProfile })
+    } catch (error) {
+        console.error('Error in getting orders delivered by driver:', error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
 }
 
 module.exports = {
@@ -296,5 +341,6 @@ module.exports = {
     getOrdersCompletedByDriver,
     getDriverProfile,
     getReadyOrders,
-    updateOrdersDeliveredByDriver
+    updateOrdersDeliveredByDriver,
+    updateDriverRating,
 }
