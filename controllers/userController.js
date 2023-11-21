@@ -89,7 +89,7 @@ const deleteUserAddress = async (req, res) => {
 
 
     if (!email || !id) {
-      return res.status(400).send({message: 'Bad Request'});
+      return res.status(400).send({message: 'Missing email or id'});
     }
 
     const user = await User.findOne({email});
