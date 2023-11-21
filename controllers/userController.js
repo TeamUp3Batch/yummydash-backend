@@ -82,8 +82,49 @@ const updatePrimaryAddress = async (req, res) => {
   }
 };
 
+const deleteUserAddress = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const id = req.body.id;
+
+
+    if (!email || !id) {
+      return res.status(400).send({message: 'Missing email or id'});
+    }
+
+    const user = await User.findOne({email});
+
+    if (!user) {
+      return res.status(404).send({message: 'User not found'});
+    }
+
+    // eslint-disable-next-line max-len
+    const addressIndex = user.address.findIndex((address) => address._id.toString() === id);
+
+
+    if (addressIndex === -1) {
+      return res.status(404).send({message: 'Address not found'});
+    }
+
+    // Remove the address at the specified index
+    user.address.splice(addressIndex, 1);
+
+    // If the address being deleted is the primary address,
+    await user.save();
+
+    res.status(201).send({
+      addresses: user.address,
+      status: 'success',
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
+
 
 module.exports = {
   addNewUserAddress,
   updatePrimaryAddress,
+  deleteUserAddress,
 };
