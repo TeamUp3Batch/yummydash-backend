@@ -333,6 +333,21 @@ const updateDriverRating = async (req, res) => {
     }
 }
 
+const getAllDrivers = async(req,res) =>{
+    try {
+        const drivers = await Driver.find().select('-password')
+
+        if (!drivers || drivers.length === 0) {
+            return res.status(404).json({ message: 'No drivers' })
+        }
+
+        res.status(200).json(drivers)
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+}
+
 module.exports = {
     authDriver,
     registerDriver,
@@ -343,4 +358,5 @@ module.exports = {
     getReadyOrders,
     updateOrdersDeliveredByDriver,
     updateDriverRating,
+    getAllDrivers
 }
