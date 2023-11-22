@@ -224,9 +224,26 @@ const getAllPartners = async (req, res) => {
     }
 }
 
+
+const getNumberofPartners = async (req, res) => {
+    try {
+        const numberOfPartners = await Partner.countDocuments();
+
+        if (numberOfPartners === 0) {
+            return res.status(404).json({ message: 'No partners' });
+        }
+
+        res.status(200).json({ numberOfPartners });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
 module.exports = {
     authPartner,
     registerPartner,
     logoutPartner,
-    getAllPartners
+    getAllPartners,
+    getNumberofPartners
 }
