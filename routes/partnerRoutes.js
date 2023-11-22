@@ -4,7 +4,8 @@ const router = express.Router();
 const {
   authPartner,
   registerPartner, 
-  logoutPartner 
+  logoutPartner ,
+  getAllPartners
 } = require('../controllers/partnerController');
 const protect = require('../middleware/authMiddleware');
 
@@ -12,6 +13,7 @@ const protect = require('../middleware/authMiddleware');
 router.post('/login', authPartner);
 router.post('/registerPartner', registerPartner);
 router.post('/logout', logoutPartner);
+router.get('/getAllPartners', getAllPartners);
 
 module.exports = router;
 

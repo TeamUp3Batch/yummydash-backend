@@ -10,7 +10,8 @@ const {
   getOrdersCompletedByDriver,
   getDriverProfile,
   getReadyOrders,
-  updateDriverRating
+  updateDriverRating,
+  getAllDrivers
 
 } = require('../controllers/driverController');
 const protect = require('../middleware/authMiddleware');
@@ -24,5 +25,6 @@ router.get('/getOrdersPickedByDriver',getOrdersPickedByDriver);
 router.get('/getOrdersCompletedByDriver',getOrdersCompletedByDriver)
 router.get('/getDriverProfile',getDriverProfile)
 router.get('/getReadyOrders',getReadyOrders);
+router.get('/getAllDrivers',getAllDrivers);
 module.exports = router;
 
