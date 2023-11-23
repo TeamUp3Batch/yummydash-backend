@@ -138,9 +138,26 @@ const getAllUsers = async(req,res) =>{
 }
 
 
+
+const getNumberofUsers = async (req, res) => {
+  try {
+      const numberOfUsers = await User.countDocuments();
+
+      if (numberOfUsers === 0) {
+          return res.status(404).json({ message: 'No User' });
+      }
+
+      res.status(200).json({ numberOfUsers });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
 module.exports = {
   addNewUserAddress,
   updatePrimaryAddress,
   deleteUserAddress,
-  getAllUsers
+  getAllUsers,
+  getNumberofUsers
 };

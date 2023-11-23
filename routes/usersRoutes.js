@@ -4,7 +4,8 @@ const {registerUser} = require('../controllers/authController');
 const {addNewUserAddress,
   updatePrimaryAddress,
   deleteUserAddress,
-  getAllUsers
+  getAllUsers,
+  getNumberofUsers
 } = require('../controllers/userController');
 // const protect = require('../middleware/authMiddleware');
 
@@ -14,5 +15,5 @@ router.post('/addNewAddress', addNewUserAddress);
 router.post('/updatePrimaryAddress', updatePrimaryAddress);
 router.post('/deleteUserAddress', deleteUserAddress);
 router.get('/getAllUsers',getAllUsers);
-
+router.get('/getNumberofUsers',getNumberofUsers);
 module.exports = router;

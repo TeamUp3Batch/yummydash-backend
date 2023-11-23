@@ -5,7 +5,9 @@ const {
   authPartner,
   registerPartner, 
   logoutPartner ,
-  getAllPartners
+  getAllPartners,
+  getNumberofPartners
+  
 } = require('../controllers/partnerController');
 const protect = require('../middleware/authMiddleware');
 
@@ -14,6 +16,7 @@ router.post('/login', authPartner);
 router.post('/registerPartner', registerPartner);
 router.post('/logout', logoutPartner);
 router.get('/getAllPartners', getAllPartners);
+router.get('/getNumberofPartners', getNumberofPartners);
 
-module.exports = router;
+module.exports = router;getNumberofPartners
 
