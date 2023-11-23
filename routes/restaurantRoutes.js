@@ -14,7 +14,8 @@ const {
   getMenusBelowDeliveryMinTime,
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
-  updateRestaurantRating
+  updateRestaurantRating,
+  updateRestaurantDetails
   
 
 } = require('../controllers/restaurantController');
@@ -36,6 +37,8 @@ router.get('/getMenusBelowDeliveryMinTime', getMenusBelowDeliveryMinTime);
 router.get('/getMenusBelowDeliveryMedTime', getMenusBelowDeliveryMedTime);
 router.get('/getMenusBelowDeliveryMaxTime', getMenusBelowDeliveryMaxTime);
 router.post('/updateRestaurantRating',updateRestaurantRating);
+router.post('/updateRestaurantDetails',updateRestaurantDetails);
+
 
 
 module.exports = router;
