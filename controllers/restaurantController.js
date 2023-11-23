@@ -1,5 +1,6 @@
 const {Restaurant} = require('../models/restaurant');
 const { Cart } = require('../models/cart')
+const { Partner } = require('../models/partner');
 
 // Controller function to get all restaurants in an area
 
@@ -397,6 +398,60 @@ catch (error) {
 }
 }
 
+const updateRestaurantDetails = async(req,res) =>{
+  try {
+    
+    const restaurantId = req.body.restaurantId;
+    const name = req.body.name;
+    const description = req.body.description;
+    const cuisine = req.body.cuisine;
+    const phone = req.body.phone;
+    const website = req.body.website;
+    const email = req.body.email;
+    const restaurantImage = req.body.restaurantImage;
+    const minEstimatedTime = req.body.minEstimatedTime;
+    const medEstimatedTime = req.body.medEstimatedTime;
+    const maxEstimatedTime = req.body.maxEstimatedTime;
+
+    if ( !restaurantId ) {
+      return res.status(400).json({ message: 'Missing required restaurantId' });
+    }
+
+    const restaurant = await Restaurant.findById(restaurantId);
+    const partner = await Partner.findOne({restaurantId});
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+    if (!partner) {
+      return res.status(404).json({ message: 'Partner not found' });
+    }
+
+    // Update the existing menu item
+    restaurant.name = name;
+    restaurant.description = description;
+    restaurant.cuisine = cuisine;
+    restaurant.contact.phone = phone;
+    restaurant.contact.email = email;
+    restaurant.contact.website = website;
+    restaurant.restaurantImage = restaurantImage;
+    restaurant.estimatedDeliveryTime.minEstimatedTime = minEstimatedTime;
+    restaurant.estimatedDeliveryTime.medEstimatedTime = medEstimatedTime;
+    restaurant.estimatedDeliveryTime.maxEstimatedTime = maxEstimatedTime;
+
+    await restaurant.save();
+    partner.name = name;
+    partner.email = email;
+    partner.phoneNumber = phone;
+
+    await partner.save();
+
+    res.status(201).json(restaurant);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+}
+
 
 
 
@@ -416,4 +471,5 @@ module.exports = {
   getMenusBelowDeliveryMedTime,
   getMenusBelowDeliveryMaxTime,
   updateRestaurantRating,
+  updateRestaurantDetails
 };

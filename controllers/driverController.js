@@ -348,6 +348,37 @@ const getAllDrivers = async(req,res) =>{
     }
 }
 
+const updateDriverDetails = async(req,res) =>{
+
+    try {
+
+        const driverId = req.body.driverId;
+        const firstName = req.body.firstName;
+        const lastName = req.body.lastName;
+        const phoneNumber = req.body.phoneNumber;
+
+
+        if ( !driverId ) {
+            return res.status(404).json({ message: 'Missing driveId' })
+        }
+        const driver = await Driver.findById(driverId);
+        if ( !driver ) {
+            return res.status(404).json({ message: 'No drivers' })
+        }
+
+        driver.firstName = firstName;
+        driver.lastName = lastName;
+        driver.phoneNumber = phoneNumber;
+
+        await driver.save()
+        res.status(200).json({driver:driver})
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
+
+}
+
 module.exports = {
     authDriver,
     registerDriver,
@@ -358,5 +389,6 @@ module.exports = {
     getReadyOrders,
     updateOrdersDeliveredByDriver,
     updateDriverRating,
-    getAllDrivers
+    getAllDrivers,
+    updateDriverDetails
 }
