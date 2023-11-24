@@ -114,6 +114,7 @@ const updateCart = async (req, res) => {
             )
             const userAddress = primaryAddress.userAddress1
             const restaurantAddress = restaurant.address.address1
+            const restaurantName = restaurant.name
             const newCart = new Cart({
                 userId,
                 restaurantId,
@@ -121,6 +122,8 @@ const updateCart = async (req, res) => {
                 userContact: userPhone,
                 userAddress: userAddress,
                 restaurantAddress: restaurantAddress,
+                restaurantName: restaurantName,
+                
                 menuItems: [
                     {
                         itemId: menuId,
