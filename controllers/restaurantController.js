@@ -400,18 +400,17 @@ catch (error) {
 
 const updateRestaurantDetails = async(req,res) =>{
   try {
-    
-    const restaurantId = req.body.restaurantId;
+    const restaurantId = req.body._id;
     const name = req.body.name;
     const description = req.body.description;
     const cuisine = req.body.cuisine;
-    const phone = req.body.phone;
-    const website = req.body.website;
-    const email = req.body.email;
+    const phone = req.body.contact.phone;
+    const website = req.body.contact.website;
+    const email = req.body.contact.email;
     const restaurantImage = req.body.restaurantImage;
-    const minEstimatedTime = req.body.minEstimatedTime;
-    const medEstimatedTime = req.body.medEstimatedTime;
-    const maxEstimatedTime = req.body.maxEstimatedTime;
+    const minEstimatedTime = req.body.estimatedDeliveryTime.minEstimatedTime;
+    const medEstimatedTime = req.body.estimatedDeliveryTime.medEstimatedTime;
+    const maxEstimatedTime = req.body.estimatedDeliveryTime.maxEstimatedTime;
 
     if ( !restaurantId ) {
       return res.status(400).json({ message: 'Missing required restaurantId' });
