@@ -8,6 +8,7 @@ const cartSchema = new mongoose.Schema({
   userContact:{type:String,required:true},
   userAddress:{type:String,required:true},
   restaurantAddress:{type:String,required:true},
+  restaurantName:{type:String,required:true},
   menuItems: [{
     itemId: {type: String},
     name: {type: String},
