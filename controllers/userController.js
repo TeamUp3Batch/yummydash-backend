@@ -154,10 +154,69 @@ const getNumberofUsers = async (req, res) => {
   }
 };
 
+//Fetch  User Profile
+const getUserProfileByEmail = async (req, res) => {
+  try {
+    const email= req.query.emailId;
+
+    if (!email){
+      return res
+        .status(400)
+        .json({message: 'User email id missing or not matched'});
+    }
+    const user = await User.findOne({email});
+    
+    if (!user){
+      return res  
+        .status(400)
+        .json({message: 'User not found'});
+    }
+
+    res.status(200).json(user);
+  } catch(error) {
+    console.error('Error in getUserProfileByEmail', error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
+
+//Update  User Profile
+const updateUserProfileByEmail = async(req, res) => {
+  try {
+    const fName = req.body.firstName;
+    const lName = req.body.lastName;
+    const pNumber = req.body.phoneNumber;
+    const primaryEmail = req.body.email;
+
+    if(!fName || !lName || !phpNumberoneNumber || !primaryEmail)  {
+      return res.status(400).json({ message: 'User data cannot be missing!'});
+    }
+
+    const user = await User.findOne({primaryEmail});
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+
+    }
+
+    user.firstName = fName;
+    user.lastName = lName;
+    user.phoneNumber = pNumber;
+
+    await user.save()
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({message: 'Internal Server Error'});
+  }
+};
+
+
 module.exports = {
   addNewUserAddress,
   updatePrimaryAddress,
   deleteUserAddress,
   getAllUsers,
-  getNumberofUsers
+  getNumberofUsers,
+  getUserProfileByEmail,
+  updateUserProfileByEmail
 };
