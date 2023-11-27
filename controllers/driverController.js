@@ -352,16 +352,17 @@ const updateDriverDetails = async(req,res) =>{
 
     try {
 
-        const driverId = req.body.driverId;
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const phoneNumber = req.body.phoneNumber;
+        const email = req.body.email;
 
 
-        if ( !driverId ) {
-            return res.status(404).json({ message: 'Missing driveId' })
+        if ( !email ) {
+            return res.status(404).json({ message: 'Missing email' })
         }
-        const driver = await Driver.findById(driverId);
+        const driver = await Driver.findOne({email});
+
         if ( !driver ) {
             return res.status(404).json({ message: 'No drivers' })
         }
@@ -369,6 +370,7 @@ const updateDriverDetails = async(req,res) =>{
         driver.firstName = firstName;
         driver.lastName = lastName;
         driver.phoneNumber = phoneNumber;
+
 
         await driver.save()
         res.status(200).json({driver:driver})
