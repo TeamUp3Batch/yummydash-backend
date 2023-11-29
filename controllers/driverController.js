@@ -289,7 +289,6 @@ const updateOrdersDeliveredByDriver = async (req, res) => {
 const updateDriverRating = async (req, res) => {
     try {
         const driverId = req.body.driverId
-    
 
         if (!driverId) {
             return res
@@ -333,7 +332,7 @@ const updateDriverRating = async (req, res) => {
     }
 }
 
-const getAllDrivers = async(req,res) =>{
+const getAllDrivers = async (req, res) => {
     try {
         const drivers = await Driver.find().select('-password')
 
@@ -348,37 +347,32 @@ const getAllDrivers = async(req,res) =>{
     }
 }
 
-const updateDriverDetails = async(req,res) =>{
-
+const updateDriverDetails = async (req, res) => {
     try {
+        const firstName = req.body.firstName
+        const lastName = req.body.lastName
+        const phoneNumber = req.body.phoneNumber
+        const email = req.body.email
 
-        const firstName = req.body.firstName;
-        const lastName = req.body.lastName;
-        const phoneNumber = req.body.phoneNumber;
-        const email = req.body.email;
-
-
-        if ( !email ) {
+        if (!email) {
             return res.status(404).json({ message: 'Missing email' })
         }
-        const driver = await Driver.findOne({email});
+        const driver = await Driver.findOne({ email })
 
-        if ( !driver ) {
+        if (!driver) {
             return res.status(404).json({ message: 'No drivers' })
         }
 
-        driver.firstName = firstName;
-        driver.lastName = lastName;
-        driver.phoneNumber = phoneNumber;
-
+        driver.firstName = firstName
+        driver.lastName = lastName
+        driver.phoneNumber = phoneNumber
 
         await driver.save()
-        res.status(200).json({driver:driver})
+        res.status(200).json({ driver: driver })
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Internal Server Error' })
     }
-
 }
 
 module.exports = {
@@ -392,5 +386,5 @@ module.exports = {
     updateOrdersDeliveredByDriver,
     updateDriverRating,
     getAllDrivers,
-    updateDriverDetails
+    updateDriverDetails,
 }
