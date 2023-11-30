@@ -14,6 +14,7 @@ const session = require('express-session');
 const menuRoutes=require('./routes/menuRoutes');
 const driverRoutes=require('./routes/driverRoutes');
 const partnerRoutes=require('./routes/partnerRoutes');
+const dashboardRoutes=require('./routes/dashboardRoutes');
 
 // database connection
 
@@ -44,6 +45,7 @@ app.use('/api/cart', cartRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/driver', driverRoutes);
 app.use('/api/partner',partnerRoutes);
+app.use('/api/dashboard',dashboardRoutes);
 
 // testing route
 app.get('/test', (req, res) => {
