@@ -47,7 +47,7 @@ const sendOTP = async (req, res) => {
                 //donot delete the commented code below
                 //to initialise the admin when doing otp for first time
                 // const newAdmin = new Admin({
-                //     email: 'teamupcomit@gmail.com',
+                //     email: process.env.ADMIN_EMAIL,
                 //     otp: hashedOTP,
                 //     otpCreatedAt: new Date(),
                 //     otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
@@ -56,7 +56,7 @@ const sendOTP = async (req, res) => {
                 //   await newAdmin.save();
                 //donot delete the commented code above
                 await Admin.findOneAndUpdate(
-                  { email: process.env.ADMIN_EMAIL }, // Replace with the admin email for whom OTP is generated
+                  { email: process.env.ADMIN_EMAIL },
                   {
                     otp: hashedOTP,
                     otpCreatedAt: new Date(),
