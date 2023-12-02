@@ -84,19 +84,19 @@ const verifyOTP = async (req, res) => {
 
             
         if( !admin.otp || !admin.otpCreatedAt) {
-            return res.status(404).json({ status:'expired', message: 'OTP not found or expired' })
+            return res.status(404).json({ status:'expired', message: 'OTP not found ' })
         }
 
         const isExpired = new Date() > admin.otpExpiry
         if (isExpired) {
             return res
                 .status(401)
-                .json({ message: 'OTP expired, request a new one' })
+                .json({ status:'expired', message: 'OTP expired, request a new one' })
         }
 
         const isMatch = await bcrypt.compare(otp, admin.otp)
         if (!isMatch) {
-            return res.status(401).json({ message: 'Invalid OTP' })
+            return res.status(401).json({ status:'invalid',message: 'Invalid OTP' })
         }
 
         // Clear OTP after successful verification
