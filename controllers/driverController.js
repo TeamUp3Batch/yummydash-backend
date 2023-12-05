@@ -24,6 +24,8 @@ const authDriver = async (req, res) => {
                 lastName: driver.lastName,
                 email: driver.email,
                 phoneNumber: driver.phoneNumber,
+                ordersDelivered: driver.ordersDelivered,
+                rating:driver.userRating,
             }
             req.session.isAuth = true
 
@@ -33,7 +35,8 @@ const authDriver = async (req, res) => {
                 lastName: driver.lastName,
                 email: driver.email,
                 phoneNumber: driver.phoneNumber,
-
+                ordersDelivered: driver.ordersDelivered,
+                rating:driver.userRating,
                 token,
                 status: true,
             })
@@ -254,7 +257,7 @@ const getReadyOrders = async (req, res) => {
 
 const updateOrdersDeliveredByDriver = async (req, res) => {
     try {
-        const driverId = req.post.driverId
+        const driverId = req.body.driverId
         const orderStatus = 'delivery'
 
         if (!driverId) {

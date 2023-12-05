@@ -153,7 +153,6 @@ const getNumberofUsers = async (req, res) => {
   }
 };
 
-// Update  User Profile
 const updateUserProfileByEmail = async (req, res) => {
   try {
     const firstName = req.body.firstName;
