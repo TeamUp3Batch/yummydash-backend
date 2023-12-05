@@ -99,7 +99,7 @@ const registerUser = async (req, res) => {
         firstName: newSavedUser.firstName,
         lastName: newSavedUser.lastName,
         email: newSavedUser.email,
-        phoneNumber: newSavedUser.email,
+        phoneNumber: newSavedUser.phoneNumber,
         address: [],
         token,
         status: true,
