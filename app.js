@@ -1,6 +1,8 @@
 require('dotenv').config()
 const express = require('express')
 const app = express()
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const connectDB = require('./config/db')
@@ -22,6 +24,32 @@ const adminRoutes = require('./routes/adminRoutes')
 connectDB()
 
 // middlewares
+
+// Swagger setup
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'YummyDash API Documentation',
+      version: '1.0.0',
+      description: 'API documentation Yummydash',
+    contact: {
+      name:'ComIT Teamup Batch 3',
+      email:'teamupcomit@gmail.com'
+    }
+    },
+    servers: [
+      {
+        url: 'http://localhost:5000', // Change this to your server URL
+        description: 'API application for YummyDash-an online food ordering website',
+      },
+    ],
+  },
+  apis: ['./routes/*.js','./routes/adminRoutes.js'], // Path to your route files
+};
+
+const swaggerDocs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cors())
