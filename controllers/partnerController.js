@@ -135,13 +135,36 @@ const registerPartner = async (req, res) => {
         // Saving the new partner to the database
         await newPartner.save()
         // Creating a new restaurant instance
+
+        let estimatedDeliveryTime = {
+            minEstimatedTime: 10,
+            medEstimatedTime: 15,
+            maxEstimatedTime: 20,
+        }
+        let address = {
+            latitude: 52.134145,
+            longitude: -106.660824,
+            address1: '103-440 2nd Ave N, Saskatoon, S7K 2C3, Canada',
+            street: '103-440 2nd Ave N',
+            city: 'Saskatoon',
+            province: 'Saskatchewan',
+            postalCode: 'S7K 2C3',
+            country: 'Canada',
+        }
         const newRestaurant = new Restaurant({
             name: name,
             contact: {
                 email: email,
                 phone: phoneNumber,
             },
-            cuisine: 'default',
+            cuisine: 'global',
+            estimatedDeliveryTime: estimatedDeliveryTime,
+            restaurantImage: process.env.DEFAULT_IMAGE,
+            address: address,
+            ratings: 0,
+
+            description:
+                'have a dining experience filled with warmth, hospitality, and flavors that linger long after your visit',
         })
 
         // Saving the new restaurant to the database
@@ -224,26 +247,25 @@ const getAllPartners = async (req, res) => {
     }
 }
 
-
 const getNumberofPartners = async (req, res) => {
     try {
-        const numberOfPartners = await Partner.countDocuments();
+        const numberOfPartners = await Partner.countDocuments()
 
         if (numberOfPartners === 0) {
-            return res.status(404).json({ message: 'No partners' });
+            return res.status(404).json({ message: 'No partners' })
         }
 
-        res.status(200).json({ numberOfPartners });
+        res.status(200).json({ numberOfPartners })
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        console.error(error)
+        res.status(500).json({ message: 'Internal Server Error' })
     }
-};
+}
 
 module.exports = {
     authPartner,
     registerPartner,
     logoutPartner,
     getAllPartners,
-    getNumberofPartners
+    getNumberofPartners,
 }
