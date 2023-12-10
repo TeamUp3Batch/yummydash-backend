@@ -15,6 +15,12 @@ Food Delivery App inspired from the popular app- Skip The Dishes
 4. Check the env.empmple
 
 ## Main Contributors
+[Anitha Amarnath](https://github.com/anithaamarnath)
+[Farhana Islam]()
+[Mohammad Abu Naser](https://github.com/royalhouse)
+[Kate Polyakov](https://github.com/KatePolyakov)
 [Kavitha Shanmugan](https://github.com/kavithashanmugan)
+[Urvi Patel](https://github.com/binal1991it)
+
 
  
