@@ -378,6 +378,36 @@ const updateDriverDetails = async (req, res) => {
     }
 }
 
+const updateDriverProfileByEmail = async (req, res) => {
+    try {
+      const firstName = req.body.firstName;
+      const lastName = req.body.lastName;
+      const phoneNumber = req.body.phoneNumber;
+      const email = req.body.email;
+  
+      if (!firstName ||!lastName || !phoneNumber || !email) {
+        return res.status(400).json({message: 'Driver data cannot be missing!'});
+      }
+  
+      const driver = await Driver.findOne({email});
+  
+      if (!driver) {
+        return res.status(404).json({message: 'Driver not found'});
+      }
+  
+      driver.firstName = firstName;
+      driver.lastName = lastName;
+      driver.phoneNumber = phoneNumber;
+  
+      await driver.save();
+  
+      res.status(201).json({ firstName: driver.firstName, lastName : driver.lastName, phoneNumber: driver.phoneNumber });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({message: 'Internal Server Error'});
+    }
+  };
+
 module.exports = {
     authDriver,
     registerDriver,
@@ -390,4 +420,5 @@ module.exports = {
     updateDriverRating,
     getAllDrivers,
     updateDriverDetails,
+    updateDriverProfileByEmail
 }

@@ -194,7 +194,8 @@ const {
   registerPartner, 
   logoutPartner ,
   getAllPartners,
-  getNumberofPartners
+  getNumberofPartners,
+  updatePartnerProfileByEmail
   
 } = require('../controllers/partnerController');
 const protect = require('../middleware/authMiddleware');
@@ -203,8 +204,10 @@ const protect = require('../middleware/authMiddleware');
 router.post('/login', authPartner);
 router.post('/registerPartner', registerPartner);
 router.post('/logout', logoutPartner);
+router.post('/updatePartnerProfileByEmail', updatePartnerProfileByEmail);
 router.get('/getAllPartners', getAllPartners);
 router.get('/getNumberofPartners', getNumberofPartners);
 
-module.exports = router;getNumberofPartners
+
+module.exports = router;
 
