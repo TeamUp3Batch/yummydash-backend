@@ -273,15 +273,26 @@ const updatePartnerProfileByEmail = async (req, res) => {
       }
   
       const partner = await Partner.findOne({email});
+      const restaurant = await Restaurant.findOne({'contact.email': email});
+
   
       if (!partner) {
         return res.status(404).json({message: 'Partner not found'});
       }
+
+      if (!restaurant) {
+        return res.status(404).json({message: 'Restaurant not found'});
+      }
+  
   
       partner.name = name;
       partner.phoneNumber = phoneNumber;
+
+      restaurant.name = name;
+      restaurant.contact.phone = phoneNumber;
   
       await partner.save();
+      await restaurant.save();
   
       res.status(201).json({ name: partner.name, phoneNumber: partner.phoneNumber });
     } catch (error) {
