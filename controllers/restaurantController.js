@@ -28,13 +28,14 @@ const getRestaurantsByCuisine = async (req, res) => {
         if (sort && sort == 'rating') {
             byCuisine = await Restaurant.find({ cuisine }).sort({ ratings: -1 })
         }
-        if (sort && sort == 'duration') {
+        else if (sort && sort == 'duration') {
             byCuisine = await Restaurant.aggregate([
                 { $match: { cuisine } },
                 { $unwind: '$estimatedDeliveryTime' },
                 { $sort: { 'estimatedDeliveryTime.minEstimatedTime': 1 } },
             ])
-        } else {
+        }
+         else {
             byCuisine = await Restaurant.find({ cuisine })
         }
         if (!byCuisine || byCuisine.length === 0) {
@@ -50,7 +51,7 @@ const getRestaurantsByCuisine = async (req, res) => {
 }
 
 // Added  by Farhana
-// get All reqaurant by Rating
+// get All restaurants by Rating
 
 const getRestaurantsByRating = async (req, res) => {
     try {
