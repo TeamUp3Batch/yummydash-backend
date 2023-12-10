@@ -13,7 +13,8 @@ const {
   updateDriverRating,
   getAllDrivers,
   updateDriverDetails,
-  updateOrdersDeliveredByDriver
+  updateOrdersDeliveredByDriver,
+  updateDriverProfileByEmail
 
 } = require('../controllers/driverController');
 const protect = require('../middleware/authMiddleware');
@@ -29,5 +30,6 @@ router.get('/getReadyOrders',getReadyOrders);
 router.get('/getAllDrivers',getAllDrivers);
 router.post('/updateDriverDetails',updateDriverDetails);
 router.post('/updateDeliveredOrdersByDriver',updateOrdersDeliveredByDriver);
+router.post('/updateDriverProfileByEmail',updateDriverProfileByEmail)
 module.exports = router;
 
