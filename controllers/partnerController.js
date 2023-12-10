@@ -262,10 +262,42 @@ const getNumberofPartners = async (req, res) => {
     }
 }
 
+const updatePartnerProfileByEmail = async (req, res) => {
+    try {
+      const name = req.body.name;
+      const phoneNumber = req.body.phoneNumber;
+      const email = req.body.email;
+  
+      if (!name || !phoneNumber || !email) {
+        return res.status(400).json({message: 'Restaurant data cannot be missing!'});
+      }
+  
+      const partner = await Partner.findOne({email});
+  
+      if (!partner) {
+        return res.status(404).json({message: 'Partner not found'});
+      }
+  
+      partner.name = name;
+      partner.phoneNumber = phoneNumber;
+  
+      await partner.save();
+  
+      res.status(201).json({ name: partner.name, phoneNumber: partner.phoneNumber });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({message: 'Internal Server Error'});
+    }
+  };
+  
+
+
+
 module.exports = {
     authPartner,
     registerPartner,
     logoutPartner,
     getAllPartners,
     getNumberofPartners,
+    updatePartnerProfileByEmail
 }
