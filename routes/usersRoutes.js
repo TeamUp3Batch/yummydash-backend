@@ -275,6 +275,99 @@
  *             isPrimaryAddress:
  *               type: boolean
  */
+
+/**
+ * @swagger
+ * /api/users/getAllUsersForSalesforce:
+ *   get:
+ *     summary: Get all users for Salesforce
+ *     description: Retrieves all users excluding passwords. Also Restructuee the data to match the Salesforce schema.
+ *     
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of users.
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/User'
+ *       404:
+ *         description: No users found.
+ *         schema:
+ *           properties:
+ *             message:
+ *               type: string
+ *               description: Error message ('No users').
+ *       500:
+ *         description: Internal Server Error occurred.
+ *         schema:
+ *           properties:
+ *             message:
+ *               type: string
+ *               description: Error message ('Internal Server Error').
+ * definitions:
+ *   User:
+ *     type: object
+ *     properties:
+ *       firstName:
+ *         type: string
+ *       lastName:
+ *         type: string
+ *       email:
+ *         type: string
+ *       phoneNumber:
+ *         type: string
+ *       userAddress1:
+ *         type: string
+ *       latitude:
+ *        type: string
+ *       longitude:
+ *       type: string
+ *
+ */
+
+/**
+ * @swagger
+ * /api/users/getAllUsersForSalesforceMapData:
+ *   get:
+ *     summary: Get all users for Salesforce
+ *     description: Retrieves all users excluding passwords. Also Restructuee the data to match the Salesforce schema.
+ *     
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of users.
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/User'
+ *       404:
+ *         description: No users found.
+ *         schema:
+ *           properties:
+ *             message:
+ *               type: string
+ *               description: Error message ('No users').
+ *       500:
+ *         description: Internal Server Error occurred.
+ *         schema:
+ *           properties:
+ *             message:
+ *               type: string
+ *               description: Error message ('Internal Server Error').
+ * definitions:
+ *   User:
+ *     type: object
+ *     properties:
+ *       firstName:
+ *         type: string
+ *       latitude:
+ *        type: string
+ *       longitude:
+ *       type: string
+ *
+ */
+
 /**
  * @swagger
  * /api/users/getNumberofUsers:
@@ -371,7 +464,9 @@ const {addNewUserAddress,
   deleteUserAddress,
   getAllUsers,
   getNumberofUsers,
-  updateUserProfileByEmail
+  updateUserProfileByEmail,
+  getAllUsersForSalesforce,
+  getAllUsersForSalesforceMapData
 } = require('../controllers/userController');
 // const protect = require('../middleware/authMiddleware');
 
@@ -380,7 +475,10 @@ router.post('/signup', registerUser);
 router.post('/addNewAddress', addNewUserAddress);
 router.post('/updatePrimaryAddress', updatePrimaryAddress);
 router.post('/deleteUserAddress', deleteUserAddress);
-router.get('/getAllUsers',getAllUsers);
-router.get('/getNumberofUsers',getNumberofUsers);
+router.get('/getAllUsers', getAllUsers);
+router.get('/getNumberofUsers', getNumberofUsers);
+router.get('/getAllUsersForSalesforce', getAllUsersForSalesforce);
+router.get('/getAllUsersForSalesforceMapData', getAllUsersForSalesforceMapData);
 router.post('/updateUserProfileByEmail', updateUserProfileByEmail);
+
 module.exports = router;

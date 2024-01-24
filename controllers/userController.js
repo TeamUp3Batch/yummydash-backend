@@ -137,6 +137,62 @@ const getAllUsers = async (req, res) =>{
   }
 };
 
+const getAllUsersForSalesforce = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: 'No users' });
+    }
+
+    // Map the users array to include necessary fields from the primary address
+    const modifiedUsers = users.map(user => {
+      const primaryAddress = user.address.find(addr => addr.isPrimaryAddress);
+
+      return {
+        _id: user._id,
+        firstName: user.firstName.toUpperCase(),
+        lastName: user.lastName.toUpperCase(),
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        userAddress1: primaryAddress ? primaryAddress.userAddress1 : '',
+        latitude: primaryAddress ? primaryAddress.latitude : '',
+        longitude: primaryAddress ? primaryAddress.longitude : '',
+      };
+    });
+
+    res.status(200).json(modifiedUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getAllUsersForSalesforceMapData = async (req, res) => {
+  try {
+    const users = await User.find().select('-password');
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ message: 'No users' });
+    }
+
+    // Map Data for Salesforce Map Component
+    const modifiedUsers = users.map(user => {
+      const primaryAddress = user.address.find(addr => addr.isPrimaryAddress);
+
+      return {
+        firstName: user.firstName.toUpperCase(),
+        latitude: primaryAddress ? primaryAddress.latitude : '',
+        longitude: primaryAddress ? primaryAddress.longitude : ''
+      };
+    });
+
+    res.status(200).json(modifiedUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
 
 const getNumberofUsers = async (req, res) => {
   try {
@@ -191,4 +247,6 @@ module.exports = {
   getAllUsers,
   getNumberofUsers,
   updateUserProfileByEmail,
+  getAllUsersForSalesforce,
+  getAllUsersForSalesforceMapData
 };
